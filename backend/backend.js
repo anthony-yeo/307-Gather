@@ -1,14 +1,39 @@
 const express = require('express');     //Import Express Module
+const { default: mongoose } = require('mongoose');
 const app = express();                  //Create Instance of Express
 const port = 5000;                      //Define Port Number
-//const cors = require('cors');
+const cors = require('cors');
 
-// HASH PASSWORD USING BCRYPT 12 ROUNDS
+require('dotenv').config()
 
+//-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
+
+const conn_str = 'mongodb+srv://ProjectGather:<password>@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
+
+mongoose.connect(
+    conn_str,
+    { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+    },(err) => {
+    if (err) {
+    console.log("error in connection");
+    } else {
+    console.log("mongodb is connected");
+}});
+
+app.use(cors());
+app.use(express.json());                //Process Data as JSON format
+
+app.get('/', (req, res) => {            //API Endpoint
+    res.send('Hello World!');
+});
 
 app.listen(port, () => {                //Listen to incoming requests on our defined port
     console.log(`Gather app listening at http://localhost:${port}'`);
 });
+
+
 
 
 //export DEBUG='express:router'
@@ -43,12 +68,7 @@ app.listen(port, () => {                //Listen to incoming requests on our def
 //     ]
 //  }
  
-// app.use(cors());
-// app.use(express.json());                //Process Data as JSON format
 
-// app.get('/', (req, res) => {            //API Endpoint
-//     res.send('Hello World!');
-// });
 
 // app.get('/users', (req, res) => {
 //     const name = req.query.name;
