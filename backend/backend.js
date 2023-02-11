@@ -4,11 +4,11 @@ const app = express();                  //Create Instance of Express
 const port = 5000;                      //Define Port Number
 const cors = require('cors');
 
-require('dotenv').config()
+require('dotenv').config();
 
 //-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
 
-const conn_str = 'mongodb+srv://ProjectGather:<password>@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
+const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(
     conn_str,
