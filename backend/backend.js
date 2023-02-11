@@ -7,8 +7,8 @@ const cors = require('cors');
 require('dotenv').config();
 
 //-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
-
 const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
+
 
 mongoose.connect(
     conn_str,
