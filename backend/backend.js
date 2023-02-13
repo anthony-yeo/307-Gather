@@ -1,72 +1,36 @@
-const express = require('express');     //Import Express Module
-const { default: mongoose } = require('mongoose');
-const app = express();                  //Create Instance of Express
-const port = 5000;                      //Define Port Number
+const express = require('express');    
 const cors = require('cors');
 
-require('dotenv').config();
+const userServices = require('./models/user-services')
+
+const app = express();                  
+const port = 5000;                      
 
 //-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
-const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
-
-
-mongoose.connect(
-    conn_str,
-    { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true 
-    },(err) => {
-    if (err) {
-    console.log("error in connection");
-    } else {
-    console.log("mongodb is connected");
-}});
 
 app.use(cors());
-app.use(express.json());                //Process Data as JSON format
+app.use(express.json());               
 
-app.get('/', (req, res) => {            //API Endpoint
-    res.send('Hello World!');
+app.get('/', (req, res) => {            
+    res.send("Hello World.")
 });
 
-app.listen(port, () => {                //Listen to incoming requests on our defined port
-    console.log(`Gather app listening at http://localhost:${port}'`);
+app.get("/users", async (req, res) => {
+    try {
+        const result = await userServices.getUsers();
+        res.send({users_list: result});         
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
+    }
 });
 
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+  });
 
 
 
-//export DEBUG='express:router'
-// const users = { 
-//     users_list :
-//     [
-//        { 
-//           id : 'xyz789',
-//           name : 'Charlie',
-//           job: 'Janitor',
-//        },
-//        {
-//           id : 'abc123', 
-//           name: 'Mac',
-//           job: 'Bouncer',
-//        },
-//        {
-//           id : 'ppp222', 
-//           name: 'Mac',
-//           job: 'Professor',
-//        }, 
-//        {
-//           id: 'yat999', 
-//           name: 'Dee',
-//           job: 'Aspring actress',
-//        },
-//        {
-//           id: 'zap555', 
-//           name: 'Dennis',
-//           job: 'Bartender',
-//        }
-//     ]
-//  }
  
 
 
