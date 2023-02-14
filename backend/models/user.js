@@ -5,17 +5,27 @@ const UserSchema = new mongoose.Schema(
     first_name: {
       type: String,
       required: true,
-      trim: true,
     },
     last_name: {
       type: String,
       required: true,
-      trim: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    bio: {
+      type: String,
+      required: false,
+    },
+    password: {
+      type: String,
+      required: true,
     },
   },
   { collection: "users" }
 );
 
-const User = mongoose.model("trombone", UserSchema);
+const User = mongoose.model("users", UserSchema);
 
 module.exports = User;

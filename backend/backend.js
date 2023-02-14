@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 
 const userServices = require('./models/user-services')
+;const eventServices = require('./models/events-services')
 
 const app = express();                  
 const port = 5000;                      
@@ -23,6 +24,34 @@ app.get("/users", async (req, res) => {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
     }
+});
+
+app.post('/users', async (req, res) => {
+    const user = req.body;
+    const savedUser = await userServices.addUser(user);
+    if (savedUser)
+        res.status(201).send(savedUser);
+    else
+        res.status(500).end();
+});
+
+app.get("/events", async (req, res) => {
+    try {
+        const result = await eventServices.getEvents();
+        res.send({event_list: result});         
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
+    }
+});
+
+app.post('/events', async (req, res) => {
+    const user = req.body;
+    const savedEvent = await eventServices.addUser(user);
+    if (savedEvent)
+        res.status(201).send(savedEvnt);
+    else
+        res.status(500).end();
 });
 
 app.listen(port, () => {
