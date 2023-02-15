@@ -40,6 +40,15 @@ This is to support jest.
 
 ### Neovim
 
+### Prerequisite
+- Neovim `>= 0.8.3`
+- [Mason](https://github.com/williamboman/mason.nvim)
+- [Mason Lspconfig](https://github.com/williamboman/mason-lspconfig.nvim)
+- [Null-ls](https://github.com/jose-elias-alvarez/null-ls.nvim)
+- [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+
+### Details
+
 To configure the style checker and linter use the configs files from this [repository](https://github.com/anarchaworld/dotfiles/tree/main/.config/nvim)
 and run `:MasonInstall prettier` and `:MasonInstall json` and then choose appropriate options.
 
