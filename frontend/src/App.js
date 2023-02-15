@@ -41,13 +41,13 @@ function App() {
     </div>
   );
 
-  function removeOneCharacter (_index) {
+  function removeOneCharacter (index) {
     const updated = characters.filter((character, i) => {
-      return i !== _index
+      return i !== index
     });
-    const person = characters[_index];
-    const id=person['_id'];
-    const response = axios.delete(`http://localhost:5000/users/${id}`);
+    const person = characters[index];
+    //const _id=person['_id'];
+    //const response = axios.delete(`http://localhost:5000/users/${id}`);
     setCharacters(updated);
   }
   /*function updateList(person) {
