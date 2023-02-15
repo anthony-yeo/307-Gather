@@ -42,7 +42,7 @@ Modify `package.json` to read:
 ```
 This is to support `jest`.
 
-Finally, add the "format" command to package.json to run prettier:
+Finally, add the "format" command to `package.json` to run prettier:
 ```json
     "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
 ```
