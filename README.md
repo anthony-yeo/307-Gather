@@ -38,6 +38,7 @@ Modify package.json to read:
   
 This is to support jest.
 
+_______
 ### Neovim
 
 ### Prerequisite
