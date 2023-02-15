@@ -5,7 +5,8 @@ For the Gather project, style guidelines are as follows:
   - Single quotes for strings
   - Tabs for indentation
   - K&R curly braces
-  
+ 
+ _________
 ### VS Code / npm to install extensions
 
 Run 
