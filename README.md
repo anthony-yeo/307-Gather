@@ -9,6 +9,7 @@ For the Gather project, style guidelines are as follows:
 ### VS Code / npm to install extensions
 
 Run npm install pylint --save-dev
+
 To install prettier, run npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
 To add config file, run npx pylint --init
 Store as json and select custom style options corresponding with style guide.
