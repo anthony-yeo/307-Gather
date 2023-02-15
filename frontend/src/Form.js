@@ -3,45 +3,45 @@ import React, {useState} from 'react';
 function Form(props) {
   const [person, setPerson] = useState(
      {
-        name: "",
-        job: "",
+        username: "",
+        password: "",
      }
   );
 
   function handleChange(event) {
-    const { name, value } = event.target;
-    if (name === "job")
+    const { username, value } = event.target;
+    if (username === "password")
       setPerson(
-         {name: person['name'], job: value}
+         {username: person['username'], password: value}
       );
     else     
        setPerson(
-         {name: value, job: person['job']}   
+         {username: value, password: person['password']}   
        );
   }
 
   function submitForm() {
     console.log("Submit Form Person: "+person);
     props.handleSubmit(person);
-    setPerson({name: '', job: ''});
+    setPerson({username: '', password: ''});
    
   }
 
   return (
     <form>
-      <label htmlFor="name">Name</label>
+      <label htmlFor="username">Userame</label>
       <input
         type="text"
-        name="name"
-        _id="name"
-        value={person.name}
+        username="username"
+        //_id="name"
+        value={person.username}
         onChange={handleChange} />
-      <label htmlFor="job">Job</label>
+      <label htmlFor="password">Password</label>
       <input
         type="text"
-        name="job"
-        _id="job"
-        value={person.job}
+        username="password"
+        //_id="job"
+        value={person.password}
         onChange={handleChange} />
         <input type="button" value="Submit" onClick={submitForm} />
     </form>
