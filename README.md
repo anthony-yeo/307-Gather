@@ -28,7 +28,7 @@ Add to json to match the following:
         "plugin:prettier/recommended"
     ]
 ```
-Modify package.json to read:
+Modify `package.json` to read:
 ```json
   "env": {
     "browser": true,
@@ -40,7 +40,7 @@ Modify package.json to read:
     "react/react-in-jsx-scope": "off"
   }
 ```
-This is to support jest.
+This is to support `jest`.
 
 Finally, add the "format" command to package.json to run prettier:
 ```json
