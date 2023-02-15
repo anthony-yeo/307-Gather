@@ -8,24 +8,27 @@ For the Gather project, style guidelines are as follows:
   
 ### VS Code / npm to install extensions
 
-Run npm install pylint --save-dev
+Run 
+`npm install pylint --save-dev`
 
-To install prettier, run npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev
+To install prettier, run 
+`npm install eslint-config-prettier eslint-plugin-prettier prettier --save-dev`
 
-To add config file, run npx pylint --init
+To add config file, run 
+`npx pylint --init`
 
 Store as json and select custom style options corresponding with style guide.
 
 Add to json to match the following:
-
+```json
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:prettier/recommended"
     ]
-
+```
 Modify package.json to read:
-
+```json
   "env": {
     "browser": true,
     "es2021": true,
@@ -35,7 +38,7 @@ Modify package.json to read:
     "react/prop-types": 0,
     "react/react-in-jsx-scope": "off"
   }
-  
+```
 This is to support jest.
 
 _______
