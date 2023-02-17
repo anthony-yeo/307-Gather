@@ -38,7 +38,11 @@ const UserSchema = new mongoose.Schema(
     events_created:[{
       type: ObjectId,
       required: false,
-    }]
+    }],
+    verified:{
+      type: Boolean,
+      default: false,
+    }
   },
   { collection: "users" }
 );
