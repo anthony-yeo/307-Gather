@@ -14,7 +14,7 @@ mongoose.connect(
     if (err) {
       console.log("error in connection");
     } else {
-      console.log("mongodb is connected");
+      console.log("mongodb events is connected");
 }})
 
 async function getEvents(name) {
