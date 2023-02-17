@@ -1,8 +1,8 @@
 const express = require('express');    
 const cors = require('cors');
 
-const userServices = require('./models/user-services')
-;const eventServices = require('./models/events-services')
+const userServices = require('./models/user-services');
+const eventServices = require('./models/events-services');
 
 const app = express();                  
 const port = 5000;                      
@@ -47,9 +47,9 @@ app.get("/events", async (req, res) => {
 
 app.post('/events', async (req, res) => {
     const user = req.body;
-    const savedEvent = await eventServices.addUser(user);
+    const savedEvent = await eventServices.addEvents(user);
     if (savedEvent)
-        res.status(201).send(savedEvnt);
+        res.status(201).send(savedEvent);
     else
         res.status(500).end();
 });

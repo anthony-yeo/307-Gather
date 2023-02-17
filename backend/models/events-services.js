@@ -25,7 +25,7 @@ async function getEvents(name) {
   return result;
 }
 
-async function addEvent(event) {
+async function addEvents(event) {
   try {
     const eventToAdd = new eventModel(event);
     const savedEvent = await eventToAdd.save();
@@ -47,4 +47,5 @@ async function findUserByJob(job) {
 
 
 exports.getEvents = getEvents;
+exports.addEvents = addEvents;
 

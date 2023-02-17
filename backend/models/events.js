@@ -1,46 +1,48 @@
 const mongoose = require("mongoose");
 
-const EventSchema = new mongoose.Schema(
+var ObjectId = require('mongodb').ObjectId;
+
+const EventsSchema = new mongoose.Schema(
   {
+    //HOST_ID       EX: '63ebe5b9d4d533c9fc679baa'
+    host_id:{
+      type: ObjectId,
+      required: true
+    },
+    //NAME OF EVENT EX: 'VOLLEYBALL GAME'
     name: {
       type: String,
       required: true,
-      trim: true,
     },
-    location: {
+    //LOCATION      EX: 'LIBRARY 3RD FLOOR'
+    location:{
       type: String,
-      required: true,
-      trim: true,
+      require: true
     },
-    description: {
+    //DESCRIPTION   EX: 'CSC 430 STUDY SESSION'
+    description:{
       type: String,
-      required: true,
-      trim: true,
+      require: true
     },
-    date: {
+    //DATE          EX: '2023-02-28 08:30:00'
+    date:{
+      type: Date,
+      required: true
+    },
+    //CATEGORY      EX: 'ACADEMICS' - NOTE{CONSIDER REFERENCING A SET CATEGORIES TABLE}
+    category:{
       type: String,
-      required: true,
-      trim: true,
+      require: true
     },
-    time: {
-      type: String,
+    //GPS          EX: [-122.5, 37.7]
+    gps:{
+      type: [Number],
       required: true,
-      trim: true,
-    },
-    category: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    host_id: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    }
   },
   { collection: "events" }
 );
 
-const User = mongoose.model("events", EventSchema);
+const Events = mongoose.model("events", EventsSchema);
 
-module.exports = User;
+module.exports = Events;
