@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+var ObjectId = require('mongodb').ObjectId;
+
 
 const UserSchema = new mongoose.Schema(
   {
@@ -28,6 +30,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    friends:[{
+      type: ObjectId,
+      required: false,
+    }],
+    events_created:[{
+      type: ObjectId,
+      required: false,
+    }]
   },
   { collection: "users" }
 );

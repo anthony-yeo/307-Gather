@@ -36,16 +36,17 @@ async function addEvents(event) {
   }
 }
 
-
-async function findUserByName(name) {
-  return await userModel.find({ name: name });
-}
-
-async function findUserByJob(job) {
-  return await userModel.find({ job: job });
+async function delEvents(id){
+  try{
+    return eventModel.find({'_id': id}).remove()
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 
 
 exports.getEvents = getEvents;
 exports.addEvents = addEvents;
+exports.delEvents = delEvents;
 
