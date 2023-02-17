@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userModel = require("./user");
+const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
 
@@ -40,6 +41,8 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
+    const hash = bcrypt.hashSync(user.password, 5);
+    user.password = hash;
     const userToAdd = new userModel(user);
     const savedUser = await userToAdd.save();
     return savedUser;
