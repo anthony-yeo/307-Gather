@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon backend.js",
     "start": "node backend.js",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix",
+    "format": "prettier --write '*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
   },
   "author": "",
   "license": "ISC",
@@ -25,14 +27,5 @@
     "eslint-plugin-react": "^7.32.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.4"
-  },
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "jest": true
-  },
-  "rules": {
-    "react/prop-types": 0,
-    "react/react-in-jsx-scope": "off"
   }
 }
