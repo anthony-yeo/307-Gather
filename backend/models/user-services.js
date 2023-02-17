@@ -64,3 +64,4 @@ async function findUserByJob(job) {
 exports.getUsers = getUsers;
 exports.findUserById = findUserById;
 exports.addUser = addUser;
+exports.validateUser = validateUser;
