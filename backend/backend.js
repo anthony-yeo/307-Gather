@@ -20,7 +20,10 @@ app.get('/', (req, res) => {
 app.get("/users", async (req, res) => {
     try {
         const result = await userServices.getUsers();
-        res.send({users_list: result});         
+        if (result===undefined)
+            res.status(406).send('User not found.');
+        else
+            res.status(200).send({users_list: result});         
     } catch (error) {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
