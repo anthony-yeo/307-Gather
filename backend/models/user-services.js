@@ -61,12 +61,12 @@ async function delUser(id){
   }
 }
 
-async function validateUser(email, password) {
-  if (email === undefined || password === undefined) return false;
+async function validateUser(reqInfo) {
+  if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
   try {
-    const user = await userModel.findOne({ 'email':email });
+    const user = await userModel.findOne({ 'email':reqInfo.email });
     if (user === undefined) return false;
-    return bcrypt.compareSync(password, user.password);
+    return bcrypt.compareSync(reqInfo.password, user.password);
   } catch (error) {
     console.log(error);
     return false;
