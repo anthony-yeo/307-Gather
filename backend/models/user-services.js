@@ -41,7 +41,7 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
-    const hash = bcrypt.hashSync(user.password, 5);
+    const hash = bcrypt.hashSync(user.password, 12);
     user.password = hash;
     const userToAdd = new userModel(user);
     const savedUser = await userToAdd.save();
