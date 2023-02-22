@@ -61,6 +61,18 @@ async function delUser(id){
   }
 }
 
+async function validateUser(email, password) {
+  if (email === undefined || password === undefined) return false;
+  try {
+    const user = await userModel.findOne({ 'email':email });
+    if (user === undefined) return false;
+    return bcrypt.compareSync(password, user.password);
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 async function findUserByName(name) {
   return await userModel.find({ name: name });
 }
@@ -74,3 +86,4 @@ exports.getUsers = getUsers;
 exports.findUserById = findUserById;
 exports.addUser = addUser;
 exports.delUser = delUser;
+exports.validateUser = validateUser;

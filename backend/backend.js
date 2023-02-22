@@ -45,6 +45,14 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).send(userToDel)
 });
 
+app.post('/login', async (req, res) => {
+    const result = await userServices.validateUser(req.body.email, req.body.password);
+    if (result===true)
+        res.status(200).send('Successful login');
+    else    
+        res.status(401).end();
+});
+
 //EVENTS-------------------------------------------------------------
 app.get("/events", async (req, res) => {
     try {
