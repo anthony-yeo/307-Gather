@@ -5,9 +5,9 @@ const userServices = require('./models/user-services');
 const eventServices = require('./models/events-services');
 
 const app = express();                  
-const port = 5000;          
+const port = 5000;                      
 
-//-----------------HASH PASSWORD USING BCRYPT 10 ROUNDS----------------------------------
+//-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
 
 app.use(cors());
 app.use(express.json());               
@@ -17,12 +17,9 @@ app.get('/', (req, res) => {
 });
 
 //USERS--------------------------------------------------------------
-//NOTES
-//ADDFRIENDS IN MONGOSH WITH DB.USERS.UPDATEONE({QUERY}{$PUSH:{NEW DATA}})
 app.get("/users", async (req, res) => {
-
     try {
-        const result = await userServices.getUsers(req.first_);
+        const result = await userServices.getUsers();
         res.send({users_list: result});         
     } catch (error) {
         console.log(error);
@@ -32,6 +29,7 @@ app.get("/users", async (req, res) => {
 
 app.post('/users', async (req, res) => {
     const user = req.body;
+    res.send(user);
     const savedUser = await userServices.addUser(user);
     if (savedUser)
         res.status(201).send(savedUser);
@@ -48,7 +46,6 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).send(userToDel)
 });
 
-
 app.post('/login', async (req, res) => {
     const result = await userServices.validateUser(req.body);
     if (result===true)
@@ -56,29 +53,6 @@ app.post('/login', async (req, res) => {
     else    
         res.status(401).end();
 });
-
-app.patch('/users/:id', async (req, res) => {
-    const id = req.params['id'];
-    const user = req.body;
-
-    res.send(user);
-
-    if (friend === undefined){
-        const result = await userServices.saveEvent(id, event);
-        res.status(200).send(result);
-    }
-    else if (event === undefined){
-        res.send('Hi')
-    }
-    res.status(500).end();
-
-    const updatedUser = await userServices.saveEvent(id, event);
-    if (updatedUser)
-        res.status(202).send(updatedUser)
-    else
-        res.status(500).end();
-});
-
 
 //EVENTS-------------------------------------------------------------
 app.get("/events", async (req, res) => {

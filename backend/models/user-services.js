@@ -5,9 +5,7 @@ const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
 
-var ObjectId = require('mongodb').ObjectId;
 const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
-const hashRound = 10;            
 
 mongoose.connect(
   conn_str,
@@ -21,14 +19,14 @@ mongoose.connect(
       console.log("mongodb users is connected");
 }})
 
-async function getUsers(first_name, last_name) {
+async function getUsers(name, job) {
   let result;
-  if (first_name === undefined && last_name === undefined) {
+  if (name === undefined && job === undefined) {
     result = await userModel.find();
-  } else if (first_name && !last_name) {
-    result = await findUserByFirstName(first_name);
-  } else if (first_name && !last_name) {
-    result = await findUserByLastName(job);
+  } else if (name && !job) {
+    result = await findUserByName(name);
+  } else if (job && !name) {
+    result = await findUserByJob(job);
   }
   return result;
 }
@@ -44,7 +42,7 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
-    const hash = bcrypt.hashSync(user.password, hashRound);
+    const hash = await bcrypt.hashSync(user.password, 12);
     user.password = hash;
     const userToAdd = new userModel(user);
     const savedUser = await userToAdd.save();
@@ -78,16 +76,11 @@ async function saveEvent(id, eventId) {
 
 async function delUser(id){
   try{
-    return userModel.find({'_id': id}).remove();
+    return userModel.find({'_id': id}).remove()
   } catch (error) {
     console.log(error);
     return false;
   }
-}
-
-
-async function findUserByFirstName(first_name) {
-  return await userModel.find({ first_name: first_name });
 }
 
 async function validateUser(reqInfo) {
@@ -106,8 +99,8 @@ async function findUserByName(name) {
   return await userModel.find({ name: name });
 }
 
-async function findUserByLastName(last_name) {
-  return await userModel.find({ last_name: last_name });
+async function findUserByJob(job) {
+  return await userModel.find({ job: job });
 }
 
 
@@ -115,7 +108,5 @@ exports.getUsers = getUsers;
 exports.findUserById = findUserById;
 exports.addUser = addUser;
 exports.delUser = delUser;
-//exports.addFriend = addFriend;
 exports.validateUser = validateUser;
 exports.saveEvent = saveEvent;
-
