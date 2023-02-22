@@ -7,6 +7,7 @@ require('dotenv').config();
 
 var ObjectId = require('mongodb').ObjectId;
 const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
+const hashRound = 10;            
 
 mongoose.connect(
   conn_str,
@@ -43,7 +44,7 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
-    const hash = bcrypt.hashSync(user.password, 12);
+    const hash = bcrypt.hashSync(user.password, hashRound);
     user.password = hash;
     const userToAdd = new userModel(user);
     const savedUser = await userToAdd.save();

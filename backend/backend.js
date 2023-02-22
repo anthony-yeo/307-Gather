@@ -5,9 +5,9 @@ const userServices = require('./models/user-services');
 const eventServices = require('./models/events-services');
 
 const app = express();                  
-const port = 5000;                      
+const port = 5000;          
 
-//-----------------HASH PASSWORD USING BCRYPT 12 ROUNDS----------------------------------
+//-----------------HASH PASSWORD USING BCRYPT 10 ROUNDS----------------------------------
 
 app.use(cors());
 app.use(express.json());               
