@@ -17,9 +17,12 @@ app.get('/', (req, res) => {
 });
 
 //USERS--------------------------------------------------------------
+//NOTES
+//ADDFRIENDS IN MONGOSH WITH DB.USERS.UPDATEONE({QUERY}{$PUSH:{NEW DATA}})
 app.get("/users", async (req, res) => {
+
     try {
-        const result = await userServices.getUsers();
+        const result = await userServices.getUsers(req.first_);
         res.send({users_list: result});         
     } catch (error) {
         console.log(error);
@@ -44,6 +47,17 @@ app.delete('/users/:id', async (req, res) => {
     else
         res.status(500).send(userToDel)
 });
+
+app.patch('/users', async (req, res) => {
+    const user_id = req.body._id;
+    const friend_id = req.body.friend_id;
+    const friend = await userServices.addFriend(user_id, friend_id);
+    if(friend)
+        res.status(200).send(friend)
+    else
+        res.status(400).send(friend)
+})
+
 
 //EVENTS-------------------------------------------------------------
 app.get("/events", async (req, res) => {

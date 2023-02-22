@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
 
+var ObjectId = require('mongodb').ObjectId;
 const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
 
 mongoose.connect(
@@ -18,14 +19,14 @@ mongoose.connect(
       console.log("mongodb users is connected");
 }})
 
-async function getUsers(name, job) {
+async function getUsers(first_name, last_name) {
   let result;
-  if (name === undefined && job === undefined) {
+  if (first_name === undefined && last_name === undefined) {
     result = await userModel.find();
-  } else if (name && !job) {
-    result = await findUserByName(name);
-  } else if (job && !name) {
-    result = await findUserByJob(job);
+  } else if (first_name && !last_name) {
+    result = await findUserByFirstName(first_name);
+  } else if (first_name && !last_name) {
+    result = await findUserByLastName(job);
   }
   return result;
 }
@@ -54,19 +55,36 @@ async function addUser(user) {
 
 async function delUser(id){
   try{
-    return userModel.find({'_id': id}).remove()
+    return userModel.find({'_id': id}).remove();
   } catch (error) {
     console.log(error);
     return false;
   }
 }
 
-async function findUserByName(name) {
-  return await userModel.find({ name: name });
+async function addFriend(id, friend_id){
+  try {
+    return await userModel.findById(id);
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
+  
+  // try{
+  //   return userModel.find({'_id':id});
+  //   return userModel.updateOne({'_id':ObjectId('63f001fb183b13b5d1a311ff')}, {$push:{'friends':ObjectId('123456789012')}});
+  // } catch (error){
+  //   console.log(error);
+  //   return false;
+  // }
 }
 
-async function findUserByJob(job) {
-  return await userModel.find({ job: job });
+async function findUserByFirstName(first_name) {
+  return await userModel.find({ first_name: first_name });
+}
+
+async function findUserByLastName(last_name) {
+  return await userModel.find({ last_name: last_name });
 }
 
 
@@ -74,3 +92,4 @@ exports.getUsers = getUsers;
 exports.findUserById = findUserById;
 exports.addUser = addUser;
 exports.delUser = delUser;
+exports.addFriend = addFriend;
