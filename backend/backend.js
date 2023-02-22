@@ -53,6 +53,16 @@ app.post('/login', async (req, res) => {
         res.status(401).end();
 });
 
+app.patch('/users/:id', async (req, res) => {
+    const id = req.params['id'];
+    const event = req.body.event;
+    const updatedUser = await userServices.saveEvent(id, event);
+    if (updatedUser)
+        res.status(202).send(updatedUser)
+    else
+        res.status(500).end();
+});
+
 //EVENTS-------------------------------------------------------------
 app.get("/events", async (req, res) => {
     try {

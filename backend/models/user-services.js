@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userModel = require("./user");
+const eventModel = require("./events");
 const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
@@ -52,6 +53,27 @@ async function addUser(user) {
   }
 }
 
+async function saveEvent(id, eventId) {
+  try {
+    var user = await userModel.findOne({'_id':id});
+    if (user === undefined) return false;
+    var newEventList = user.events_saved;
+
+    const newEvent = await eventModel.findById({'_id': eventId});
+    if (newEvent === undefined) return false;
+
+    if(newEventList.includes(eventId)) return false;
+
+    newEventList.push(newEvent);
+    await userModel.updateOne({ '_id': id }, {
+      events_saved: newEventList
+    });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 async function delUser(id){
   try{
     return userModel.find({'_id': id}).remove()
@@ -87,3 +109,4 @@ exports.findUserById = findUserById;
 exports.addUser = addUser;
 exports.delUser = delUser;
 exports.validateUser = validateUser;
+exports.saveEvent = saveEvent;
