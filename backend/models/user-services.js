@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const userModel = require("./user");
+const eventModel = require("./events");
 const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
@@ -53,6 +54,27 @@ async function addUser(user) {
   }
 }
 
+async function saveEvent(id, eventId) {
+  try {
+    var user = await userModel.findOne({'_id':id});
+    if (user === undefined) return false;
+    var newEventList = user.events_saved;
+
+    const newEvent = await eventModel.findById({'_id': eventId});
+    if (newEvent === undefined) return false;
+
+    if(newEventList.includes(eventId)) return false;
+
+    newEventList.push(newEvent);
+    await userModel.updateOne({ '_id': id }, {
+      events_saved: newEventList
+    });
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
 async function delUser(id){
   try{
     return userModel.find({'_id': id}).remove();
@@ -62,25 +84,25 @@ async function delUser(id){
   }
 }
 
-async function addFriend(id, friend_id){
-  try {
-    return await userModel.findById(id);
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
-  
-  // try{
-  //   return userModel.find({'_id':id});
-  //   return userModel.updateOne({'_id':ObjectId('63f001fb183b13b5d1a311ff')}, {$push:{'friends':ObjectId('123456789012')}});
-  // } catch (error){
-  //   console.log(error);
-  //   return false;
-  // }
-}
 
 async function findUserByFirstName(first_name) {
   return await userModel.find({ first_name: first_name });
+}
+
+async function validateUser(reqInfo) {
+  if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
+  try {
+    const user = await userModel.findOne({ 'email':reqInfo.email });
+    if (user === undefined) return false;
+    return bcrypt.compareSync(reqInfo.password, user.password);
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+async function findUserByName(name) {
+  return await userModel.find({ name: name });
 }
 
 async function findUserByLastName(last_name) {
@@ -92,4 +114,7 @@ exports.getUsers = getUsers;
 exports.findUserById = findUserById;
 exports.addUser = addUser;
 exports.delUser = delUser;
-exports.addFriend = addFriend;
+//exports.addFriend = addFriend;
+exports.validateUser = validateUser;
+exports.saveEvent = saveEvent;
+

@@ -48,15 +48,36 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).send(userToDel)
 });
 
-app.patch('/users', async (req, res) => {
-    const user_id = req.body._id;
-    const friend_id = req.body.friend_id;
-    const friend = await userServices.addFriend(user_id, friend_id);
-    if(friend)
-        res.status(200).send(friend)
+
+app.post('/login', async (req, res) => {
+    const result = await userServices.validateUser(req.body);
+    if (result===true)
+        res.status(200).send('Successful login');
+    else    
+        res.status(401).end();
+});
+
+app.patch('/users/:id', async (req, res) => {
+    const id = req.params['id'];
+    const user = req.body;
+
+    res.send(user);
+
+    if (friend === undefined){
+        const result = await userServices.saveEvent(id, event);
+        res.status(200).send(result);
+    }
+    else if (event === undefined){
+        res.send('Hi')
+    }
+    res.status(500).end();
+
+    const updatedUser = await userServices.saveEvent(id, event);
+    if (updatedUser)
+        res.status(202).send(updatedUser)
     else
-        res.status(400).send(friend)
-})
+        res.status(500).end();
+});
 
 
 //EVENTS-------------------------------------------------------------
