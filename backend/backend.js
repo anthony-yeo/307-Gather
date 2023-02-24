@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 //USERS--------------------------------------------------------------
+//GET USERS
 app.get("/users", async (req, res) => {
     try {
         const result = await userServices.getUsers();
@@ -30,7 +31,9 @@ app.get("/users", async (req, res) => {
     }
 });
 
+//ADD A USER
 app.post('/users', async (req, res) => {
+    
     const user = req.body;
     const savedUser = await userServices.addUser(user);
     if (savedUser)
@@ -39,6 +42,25 @@ app.post('/users', async (req, res) => {
         res.status(500).end();
 });
 
+//ADD AN EVENT
+app.post('/users/:id', async (req, res) => {
+    const id = req.params['id'];
+    const event = req.body;
+
+    const result = await userServices.addEvents(id, event);
+    res.send(result);
+})
+
+//LOGIN AUTHENTICATION
+app.post('/login', async (req, res) => {
+    const result = await userServices.validateUser(req.body);
+    if (result===true)
+        res.status(200).send('Successful login');
+    else    
+        res.status(401).end();
+});
+
+//DELETE A USER
 app.delete('/users/:id', async (req, res) => {
     const id = req.params['id'];
     const userToDel = await userServices.delUser(id);
@@ -48,14 +70,8 @@ app.delete('/users/:id', async (req, res) => {
         res.status(500).send(userToDel)
 });
 
-app.post('/login', async (req, res) => {
-    const result = await userServices.validateUser(req.body);
-    if (result===true)
-        res.status(200).send('Successful login');
-    else    
-        res.status(401).end();
-});
 
+//ADD A FRIEND OR EVENT TO SAVED EVENTS
 app.patch('/users/:id', async (req, res) => {
     const id = req.params['id'];
     const event = req.body.event_id;
@@ -92,8 +108,8 @@ app.get("/events", async (req, res) => {
 });
 
 app.post('/events', async (req, res) => {
-    const user = req.body;
-    const savedEvent = await eventServices.addEvents(user);
+    const event = req.body;
+    const savedEvent = await eventServices.addEvents(event);
     if (savedEvent)
         res.status(201).send(savedEvent);
     else
