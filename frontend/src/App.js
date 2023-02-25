@@ -1,7 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
+import mapboxgl from "!mapbox-gl"; 
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import Table from './Table';
 import Form from './Form';
+import Login from './Login';
+import CreateAccount from './CreateAccount';
+import axios from 'axios';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
@@ -13,7 +17,7 @@ function App() {
   const [zoom, setZoom] = useState(14);
   const [characters, setCharacters] = useState([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
@@ -21,7 +25,7 @@ function App() {
       center: [lng, lat],
       zoom: zoom,
     });
-  });
+  });*/
 
   useEffect(() => {
     if (!map.current) return; // wait for map to initialize
@@ -32,14 +36,14 @@ function App() {
     });
   });
 
-  return (
-    <div>
-      <div className="sidebar">
-        Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
-      </div>
-      <div ref={mapContainer} className="map-container" />
-    </div>
-  );
+  // return (
+  //   <div>
+  //     <div className="sidebar">
+  //       Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+  //     </div>
+  //     <div ref={mapContainer} className="map-container" />
+  //   </div>
+  // );
 
   function removeOneCharacter (index) {
     const updated = characters.filter((character, i) => {
@@ -86,12 +90,47 @@ async function makePostCall(person){
      return false;
   }
 }
+// "eslintConfig": {
+//   "extends": [
+//     "react-app",
+//     "react-app/jest"
+//   ]
+// },
+  // return (
+  //   <div className="container">
+  //     <Table characterData={characters} removeCharacter={removeOneCharacter} />
+  //     {/*<Form handleSubmit={updateList} /> */}
+  //     <Login />
+  //     <CreateAccount />
+  //   </div>
+  // )
   return (
     <div className="container">
-      <Table characterData={characters} removeCharacter={removeOneCharacter} />
-      <Form handleSubmit={updateList} />
+      <h1>Choose your path!</h1>
+      <BrowserRouter basename="/">
+        <nav>
+          <ul>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/createaccount">CreateAccount</Link>
+            </li>
+          </ul>
+        </nav>
+        <Routes>
+          <Route
+            path="/createaccount"
+            element={
+              <CreateAccount
+              />
+            }
+          />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
     </div>
-  )
-}
+  );
+  }
 
 export default App;
