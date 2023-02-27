@@ -6,7 +6,7 @@ require('dotenv').config();
 const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
 
 
-describe ('GATHER TEST SUITE', () => {
+describe ('GATHER BACKEND TEST SUITE', () => {
 
     beforeAll(async () => {
         await mongoose.connect(conn_str, {
@@ -34,7 +34,7 @@ describe ('GATHER TEST SUITE', () => {
         });
     });
 
-    describe ('POST/DELETE REQUESTS', () => {
+    describe ('POST REQUESTS', () => {
         test('Add a user -- success', async () => {
             const newUser = {
                 'firstName':'Jest',
@@ -45,12 +45,15 @@ describe ('GATHER TEST SUITE', () => {
             const result = await userServices.addUser(newUser);
             expect(result).toEqual(expect.objectContaining(newUser));
         });
+    });
+
+    describe ('DELETE REQUESTS', () => {
         test('Delete a user -- success', async () => {
             const delUser = {'email':'test@jest.com'};
             const result = await userServices.delUser(delUser);
             expect(result).toEqual(expect.objectContaining(result));
         });
-    });
+    })
 
 
 
@@ -60,21 +63,3 @@ describe ('GATHER TEST SUITE', () => {
     });
 });
 
-// describe ('POST REQUEST', () => {
-//     beforeAll(async () => {
-//         await mongoose.connect(conn_str, {
-//             useNewURLParse: true,
-//             useCreateIndex: true,
-//             useUnifiedTopology: true,
-//         });
-//     });
-
-//     test('TESTING', async () => {
-//         expect(2 + 2).toBe(4);
-//     });
-
-//     afterAll(done => {
-//         mongoose.disconnect();
-//         done();
-//     });
-// });

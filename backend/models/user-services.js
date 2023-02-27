@@ -109,7 +109,7 @@ async function addFriend(userId, friendId) {
     userFriends.push(friend);
     friendFriends.push(user);
 
-    await userModel.updateOne({ '_id': userId }, {
+    await userModel.updateOne({ '_id':userId }, {
       friends: userFriends
     });
 
