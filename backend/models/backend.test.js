@@ -34,6 +34,25 @@ describe ('GATHER TEST SUITE', () => {
         });
     });
 
+    describe ('POST/DELETE REQUESTS', () => {
+        test('Add a user -- success', async () => {
+            const newUser = {
+                'firstName':'Jest',
+                'lastName':'Test',
+                'email':'test@jest.com',
+                'password':'jest'
+            }
+            const result = await userServices.addUser(newUser);
+            expect(result).toEqual(expect.objectContaining(newUser));
+        });
+        test('Delete a user -- success', async () => {
+            const delUser = {'email':'test@jest.com'};
+            const result = await userServices.delUser(delUser);
+            expect(result).toEqual(expect.objectContaining(result));
+        });
+    });
+
+
 
     afterAll(done => {
         mongoose.disconnect();

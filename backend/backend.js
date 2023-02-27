@@ -84,13 +84,13 @@ app.post('/login', async (req, res) => {
 });
 
 //DELETE A USER
-app.delete('/users/:id', async (req, res) => {
-    const id = req.params['id'];
-    const userToDel = await userServices.delUser(id);
-    if (userToDel)
-        res.status(202).send(userToDel)
-    else
-        res.status(500).send(userToDel)
+app.delete('/users/', async (req, res) => {
+    const userToDel = await userServices.delUser(req.body);
+    res.send(userToDel);
+    // if (userToDel)
+    //     res.status(202).send(userToDel)
+    // else
+    //     res.status(500).send(userToDel)
 });
 
 

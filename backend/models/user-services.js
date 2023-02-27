@@ -39,8 +39,9 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
-    const checkEmail = await userModel.find({email:user.email});
-    if (checkEmail === undefined){
+    const checkEmail = await userModel.findOne({email:user.email});
+    
+    if (checkEmail !== undefined || checkEmail === null){
       const hash = bcrypt.hashSync(user.password, hashRound);
       user.password = hash;
 
@@ -50,7 +51,7 @@ async function addUser(user) {
       return savedUser;
     }
     else{
-      return "Email Already In Use"
+      return checkEmail;
     }
     
   } catch (error) {
@@ -123,9 +124,16 @@ async function addFriend(userId, friendId) {
   }
 }
 
-async function delUser(id){
+async function delUser(body){
   try{
-    return userModel.find({'_id': id}).remove()
+    if (body.userId === undefined){
+      return userModel.find({'email':body.email}).remove();
+    }
+    else if (body.email === undefined){
+      return userModel.find({'_id':body.userId}).remove();
+    }
+    else
+      return false;
   } catch (error) {
     console.log(error);
     return false;
