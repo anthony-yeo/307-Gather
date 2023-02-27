@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const sEventSchema = new mongoose.Schema(
   {
-    user_id: {
+    userId: {
       type: String,
       required: true,
       trim: true,
     },
-    event_id: {
+    eventId: {
       type: String,
       required: true,
       trim: true,
