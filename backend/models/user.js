@@ -5,12 +5,12 @@ var ObjectId = require('mongodb').ObjectId;
 const UserSchema = new mongoose.Schema(
   {
     //FIRST_NAME      EX: "JOHN"
-    first_name: {
+    firstName: {
       type: String,
       required: true,
     },
     //LAST_NAME       EX: "DOE"
-    last_name: {
+    lastName: {
       type: String,
       required: true,
     },
@@ -37,21 +37,6 @@ const UserSchema = new mongoose.Schema(
       default: [],
       required: false,
     }],
-
-    //EVENTS_CREATED  EX: "[63ebe11ff51ab2aff302ffca, ...]"
-    events_created:[{
-      type: ObjectId,
-      default: [],
-      required: true,
-    }],
-
-    //EVENTS_SAVED    EX: "[63ebe11ff51ab2aff302ffca, ...]"
-    events_saved:[{
-      type: ObjectId,
-      default: [],
-      required: true,
-    }],
-
     //NOTE{IS USER A VERIFIED USER?}
     verified:{
       type: Boolean,
@@ -65,3 +50,17 @@ const UserSchema = new mongoose.Schema(
 const User = mongoose.model("users", UserSchema);
 
 module.exports = User;
+
+/*
+
+FAFASDF
+*/
+//TEMPLATE
+/*
+{
+"first_name":"",
+"last_name":"",
+"email":"",
+"password":"",
+}
+*/

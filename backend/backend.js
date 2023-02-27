@@ -23,8 +23,9 @@ app.get("/users", async (req, res) => {
         const result = await userServices.getUsers();
         if (result===undefined)
             res.status(406).send('User not found.');
-        else
-            res.status(200).send({users_list: result});         
+        else{
+            res.status(200).send({users_list: result});
+        }         
     } catch (error) {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
@@ -33,31 +34,53 @@ app.get("/users", async (req, res) => {
 
 //ADD A USER
 app.post('/users', async (req, res) => {
-    
-    const user = req.body;
-    const savedUser = await userServices.addUser(user);
-    if (savedUser)
-        res.status(201).send(savedUser);
-    else    
-        res.status(500).end();
+    try{
+        const user = req.body;
+        const result = await userServices.addUser(user);
+
+        if (result === undefined){
+            res.status(442).send('Unprocessable Entity');
+        }
+        else{
+            res.status(201).send(result);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
 });
 
-//ADD AN EVENT
+//SAVE AN EVENT
 app.post('/users/:id', async (req, res) => {
-    const id = req.params['id'];
-    const event = req.body;
+    try{
+        eventId = req.body['eventId'];
+        hostId = req.params['id'];
 
-    const result = await userServices.addEvents(id, event);
-    res.send(result);
-})
+        const result = await userServices.saveEvent(hostId, eventId);
+        if (result === undefined || result === false){
+            res.status(442).send('Unprocessable Entity');
+        }
+        else{
+            res.status(201).send(result);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
+});
 
 //LOGIN AUTHENTICATION
 app.post('/login', async (req, res) => {
-    const result = await userServices.validateUser(req.body);
-    if (result===true)
-        res.status(200).send('Successful login');
-    else    
-        res.status(401).end();
+    try{
+        const result = await userServices.validateUser(req.body);
+        if (result===true)
+            res.status(200).send('Successful login');
+        else    
+            res.status(401).end();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
 });
 
 //DELETE A USER
@@ -71,29 +94,26 @@ app.delete('/users/:id', async (req, res) => {
 });
 
 
-//ADD A FRIEND OR EVENT TO SAVED EVENTS
+//ADD A FRIEND
 app.patch('/users/:id', async (req, res) => {
-    const id = req.params['id'];
-    const event = req.body.event_id;
-    const friend = req.body.friend_id;
+    try{
+        const userId = req.params['id'];
+        const friendId = req.body.friendId;
 
-    if (friend === undefined){
-        const result = await userServices.saveEvent(id, event);
-        if (result)
-            res.status(200).send(result);
-        else
-            res.status(500).send('Invalid Event').end()
+        const result = await userServices.addFriend(userId, friendId);
+        if (result === true){
+            res.status(200).send('Friend Successfully Added');
+        }
+        else if (result === false){
+            res.status(300).send('Users are already friends');
+        }
+        else{
+            res.status(442).send('Unprocessable Entity');
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
     }
-    else if (event === undefined){
-        const result = await userServices.addFriend(id, friend);
-        res.status(200).send(result);
-    }
-    
-    const updatedUser = await userServices.saveEvent(id, event);
-    if (updatedUser)
-        res.status(202).send(updatedUser)
-    else
-        res.status(500).end();
 });
 
 //EVENTS-------------------------------------------------------------

@@ -4,7 +4,7 @@ var ObjectId = require('mongodb').ObjectId;
 const EventsSchema = new mongoose.Schema(
   {
     //HOST_ID       EX: '63ebe5b9d4d533c9fc679baa'
-    host_id:{
+    hostId:{
       type: ObjectId,
       required: true
     },

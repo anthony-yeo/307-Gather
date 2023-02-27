@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const userModel = require("./user");
 const eventModel = require("./events");
+const attendanceModel = require("./attendance");
 const bcrypt = require("bcrypt");
 mongoose.set("debug", true);
 require('dotenv').config();
@@ -20,15 +21,10 @@ mongoose.connect(
       console.log("mongodb users is connected");
 }})
 
-async function getUsers(name, job) {
-  let result;
-  if (name === undefined && job === undefined) {
-    result = await userModel.find();
-  } else if (name && !job) {
-    result = await findUserByName(name);
-  } else if (job && !name) {
-    result = await findUserByJob(job);
-  }
+//WHAT ARE SOME WAYS WE WANT TO FILTER USER BY?
+//--VERIFIED USERS
+async function getUsers() {
+  result = await userModel.find();
   return result;
 }
 
@@ -43,53 +39,84 @@ async function findUserById(id) {
 
 async function addUser(user) {
   try {
-    const hash = bcrypt.hashSync(user.password, hashRound);
-    user.password = hash;
-    const userToAdd = new userModel(user);
-    const savedUser = await userToAdd.save();
-    return savedUser;
+    const checkEmail = await userModel.find({email:user.email});
+    if (checkEmail === undefined){
+      const hash = bcrypt.hashSync(user.password, hashRound);
+      user.password = hash;
+
+      const userToAdd = new userModel(user);
+      const savedUser = await userToAdd.save();
+
+      return savedUser;
+    }
+    else{
+      return "Email Already In Use"
+    }
+    
   } catch (error) {
     console.log(error);
-    return false;
+    return undefined;
   }
 }
 
-async function saveEvent(id, eventId) {
+async function saveEvent(userId, eventId) {
   try {
-    var user = await userModel.findOne({'_id':id});
-    if (user === undefined) return false;
-    var newEventList = user.events_saved;
+    var savedEvent = await attendanceModel.findOne({event_id:eventId});
+    if (savedEvent === null) return false;
 
-    const newEvent = await eventModel.findById({'_id': eventId});
-    if (newEvent === null) return false;
+    var newAttendeeList = savedEvent.attendees;
+    newAttendeeList.push(userId);
 
-    if(newEventList.includes(eventId)) return false;
-
-    newEventList.push(newEvent);
-    await userModel.updateOne({ '_id': id }, {
-      events_saved: newEventList
+    await attendanceModel.updateOne({'event_id':eventId}, {
+      attendees: newAttendeeList
     });
+
+    return savedEvent;
   } catch (error) {
     console.log(error);
-    return false;
+    return undefined;
   }
 }
 
-async function addFriend(id, friend_id) {
+async function validateUser(reqInfo) {
+  if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
   try {
-    var user = await userModel.findOne({'_id':id});
+    const user = await userModel.findOne({ 'email':reqInfo.email });
     if (user === undefined) return false;
-    var newFriendsList = user.friends;
 
-    const newFriend = await userModel.findById({'_id': friend_id});
-    if (newFriend === null) return false;
+    return bcrypt.compareSync(reqInfo.password, user.password);
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
+}
 
-    if(newFriendsList.includes(friend_id)) return false;
+async function addFriend(userId, friendId) {
 
-    newFriendsList.push(newFriend);
-    await userModel.updateOne({ '_id': id }, {
-      friends: newFriendsList
+  try {
+    var user = await userModel.findOne({'_id':userId});
+    var userFriends = user.friends;
+
+    var friend = await userModel.findById({'_id': friendId});
+    var friendFriends = friend.friends;
+
+    if (friend === undefined || user === undefined) return undefined;
+
+    
+    if(userFriends.includes(friendId) || friendFriends.includes(userId)) return false;
+
+    userFriends.push(friend);
+    friendFriends.push(user);
+
+    await userModel.updateOne({ '_id': userId }, {
+      friends: userFriends
     });
+
+    await userModel.updateOne({'_id':friendId}, {
+      friends: friendFriends
+    });
+
+    return true;
   } catch (error) {
     console.log(error);
     return false;
@@ -104,27 +131,6 @@ async function delUser(id){
     return false;
   }
 }
-
-async function validateUser(reqInfo) {
-  if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
-  try {
-    const user = await userModel.findOne({ 'email':reqInfo.email });
-    if (user === undefined) return false;
-    return bcrypt.compareSync(reqInfo.password, user.password);
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-}
-
-async function findUserByName(name) {
-  return await userModel.find({ name: name });
-}
-
-async function findUserByJob(job) {
-  return await userModel.find({ job: job });
-}
-
 
 exports.getUsers = getUsers;
 exports.findUserById = findUserById;

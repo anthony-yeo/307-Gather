@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const eventModel = require("./events");
 const userModel = require("./user");
+const attendanceModel = require('./attendance');
 mongoose.set("debug", true);
 require('dotenv').config();
 
@@ -26,23 +27,18 @@ async function getEvents(name) {
   return result;
 }
 
+
 async function addEvents(event) {
   try {
     const eventToAdd = new eventModel(event);
-    const host_id = eventToAdd.host_id;
-
     const createdEvent = await eventToAdd.save();
 
+    event_id = createdEvent._id;
 
-    const host = await userModel.findById({'_id': host_id});
-    var events_created = host.events_created;
+    const eventAttendance = new attendanceModel({event_id:event_id});
+    const addedEvent = await eventAttendance.save();
 
-    events_created.push(eventToAdd.id);
-
-    await userModel.updateOne({ '_id': host_id }, {
-      events_created: events_created
-    });
-    return createdEvent;
+    return createdEvent._id;
   } catch (error) {
     console.log(error);
     return false;
