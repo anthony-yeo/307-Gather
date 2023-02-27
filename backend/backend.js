@@ -117,32 +117,50 @@ app.patch('/users/:id', async (req, res) => {
 });
 
 //EVENTS-------------------------------------------------------------
+
+//GET EVENTS
 app.get("/events", async (req, res) => {
     try {
         const result = await eventServices.getEvents();
-        res.send({event_list: result});         
+        if(result===undefined) {
+            res.status(406).send('Event not found.');
+        } else {
+            res.send({event_list: result});  
+        }       
     } catch (error) {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
     }
 });
 
+//ADD AN EVENT
 app.post('/events', async (req, res) => {
     const event = req.body;
-    const savedEvent = await eventServices.addEvents(event);
-    if (savedEvent)
-        res.status(201).send(savedEvent);
-    else
-        res.status(500).end();
+    try {
+        const savedEvent = await eventServices.addEvents(event);
+        if (savedEvent)
+            res.status(201).send(savedEvent);
+        else
+            res.status(442).send('Unprocessable Entity');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');   
+    }
 });
 
+//DELETE AN EVENT
 app.delete('/events/:id', async (req, res) => {
     const id = req.params['id'];
-    const eventToDel = await eventServices.delEvents(id);
-    if (eventToDel)
-        res.status(202).send(eventToDel)
-    else
-        res.status(500).send(eventToDel)
+    try {
+        const eventToDel = await eventServices.delEvents(id);
+        if (eventToDel===true)
+            res.status(204).send(eventToDel);
+        else
+            res.status(406).send('Event not found.');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');  
+    }
 });
 
 

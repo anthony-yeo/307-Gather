@@ -21,7 +21,7 @@ mongoose.connect(
 
 async function getEvents(name) {
   let result;
-  if (name === undefined) {
+  if (name === undefined) { 
     result = await eventModel.find();
   }
   return result;
@@ -29,29 +29,21 @@ async function getEvents(name) {
 
 
 async function addEvents(event) {
-  try {
-    const eventToAdd = new eventModel(event);
-    const createdEvent = await eventToAdd.save();
+  const eventToAdd = new eventModel(event);
+  const createdEvent = await eventToAdd.save();
 
-    event_id = createdEvent._id;
+  event_id = createdEvent._id;
 
-    const eventAttendance = new attendanceModel({event_id:event_id});
-    const addedEvent = await eventAttendance.save();
+  const eventAttendance = new attendanceModel({event_id:event_id});
+  const addedEvent = await eventAttendance.save();
 
-    return createdEvent._id;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  return createdEvent;
 }
 
 async function delEvents(id){
-  try{
-    return eventModel.find({'_id': id}).remove()
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  const eventToDel = await eventModel.findOne({'_id': id});
+  if(!eventToDel) return false;
+  return (await eventToDel.remove()).acknowledged;
 }
 
 
