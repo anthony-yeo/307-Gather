@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "!mapbox-gl"; 
+import mapboxgl from "mapbox-gl";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import Table from './Table';
 import Form from './Form';
@@ -57,7 +57,7 @@ function App() {
   /*function updateList(person) {
     setCharacters([...characters, person]);
   }*/
-  function updateList(person) { 
+  function updateList(person) {
     makePostCall(person).then( result => {
     if (result && result.status === 201)
        setCharacters([...characters, result.data] );
@@ -66,12 +66,12 @@ function App() {
   async function fetchAll(){
     try {
        const response = await axios.get('http://localhost:5000/users');
-       return response.data.users_list;     
+       return response.data.users_list;
     }
     catch (error){
        //We're not handling errors. Just logging into the console.
-       console.log(error); 
-       return false;         
+       console.log(error);
+       return false;
     }
  }
  useEffect(() => {
