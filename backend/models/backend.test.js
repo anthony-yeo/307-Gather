@@ -45,6 +45,21 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.addUser(newUser);
             expect(result).toEqual(expect.objectContaining(newUser));
         });
+        test('Add a test -- success', async () => {
+            const newEvent = {
+                '_id':'1234567890ab',
+                'hostId':'63f67dd6dba96ee863500a62',
+                'name':'Trivia Night',
+                'location':'Mustang Lanes',
+                'description':'Test your brain!',
+                'date':'2023-05-14 16:00:00',
+                'category':'Social Gathering',
+                'gps':[24.56, 21.4]
+            }
+
+            const result = await eventServices.addEvents(newEvent);
+            expect(result).toEqual(expect.objectContaining(result));
+        })
     });
 
     describe ('DELETE REQUESTS', () => {
@@ -53,6 +68,11 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.delUser(delUser);
             expect(result).toEqual(expect.objectContaining(result));
         });
+        test('Delete an event -- success', async () => {
+            const result = await eventServices.delEvents('313233343536373839306162');
+            console.log(result);
+            expect(result).toEqual(expect.objectContaining(result));
+        })
     })
 
 

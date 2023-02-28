@@ -35,15 +35,17 @@ async function addEvents(event) {
   event_id = createdEvent._id;
 
   const eventAttendance = new attendanceModel({event_id:event_id});
-  const addedEvent = await eventAttendance.save();
+  const result = await eventAttendance.save();
 
-  return createdEvent;
+  return result;
 }
 
 async function delEvents(id){
   const eventToDel = await eventModel.findOne({'_id': id});
   if(!eventToDel) return false;
-  return (await eventToDel.remove()).acknowledged;
+
+  const result = await eventToDel.remove();
+  return result;
 }
 
 

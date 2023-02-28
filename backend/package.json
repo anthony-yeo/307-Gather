@@ -4,13 +4,13 @@
   "description": "",
   "main": "backend.js",
   "scripts": {
-    "test": "prettier --check . && jest",
+    "test": "jest --detectOpenHandles",
     "dev": "nodemon backend.js",
     "start": "node backend.js",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
     "format": "prettier --write '*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "test": "jest --detectOpenHandles"
+    "test":"jest"
   },
   "author": "",
   "license": "ISC",
