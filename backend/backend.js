@@ -1,8 +1,8 @@
 const express = require('express');    
 const cors = require('cors');
 
-const userServices = require('./models/user-services');
-const eventServices = require('./models/events-services');
+const userServices = require('./models/userServices');
+const eventServices = require('./models/eventServices');
 
 const app = express();                  
 const port = 5000;          

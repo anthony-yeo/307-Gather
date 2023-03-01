@@ -1,5 +1,5 @@
-const userServices = require('./user-services');
-const eventServices = require('./events-services');
+const userServices = require('./userServices');
+const eventServices = require('./eventServices');
 const mongoose = require('mongoose');
 
 require('dotenv').config();
@@ -45,7 +45,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.addUser(newUser);
             expect(result).toEqual(expect.objectContaining(newUser));
         });
-        test('Add a test -- success', async () => {
+        test('Add an event -- success', async () => {
             const newEvent = {
                 '_id':'1234567890ab',
                 'hostId':'63f67dd6dba96ee863500a62',
