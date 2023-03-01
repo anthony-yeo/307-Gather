@@ -62,6 +62,26 @@ describe ('GATHER BACKEND TEST SUITE', () => {
         })
     });
 
+    /*describe ('PATCH REQUESTS', () => {
+        test('Add a friend -- success', async () => {
+            const addFriend = {
+                'id':'Jest',
+                'friendId':'Test'
+            }
+            const result = await userServices.addUser(addFriend);
+            expect(result).toEqual(expect.objectContaining(result));
+        });
+        test('Save an event -- success', async () => {
+            const saveEvent = {
+                'id':'1234567890ab',
+                'eventId':'63f67dd6dba96ee863500a62'
+            }
+
+            const result = await eventServices.addEvents(newEvent);
+            expect(result).toEqual(expect.objectContaining(result));
+        })
+    });*/
+
     describe ('DELETE REQUESTS', () => {
         test('Delete a user -- success', async () => {
             const delUser = {'email':'test@jest.com'};

@@ -51,7 +51,7 @@ app.post('/users', async (req, res) => {
 });
 
 //SAVE AN EVENT
-app.post('/users/:id', async (req, res) => {
+app.patch('/users/:id', async (req, res) => {
     try{
         eventId = req.body['eventId'];
         hostId = req.params['id'];
