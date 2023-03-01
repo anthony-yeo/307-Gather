@@ -71,6 +71,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.addUser(addFriend);
             expect(result).toEqual(expect.objectContaining(result));
         });
+        //this is a test
         test('Save an event -- success', async () => {
             const saveEvent = {
                 'id':'1234567890ab',
