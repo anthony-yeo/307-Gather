@@ -38,6 +38,8 @@ async function addEvents(event) {
   const result = await eventAttendance.save();
 
   return result;
+
+  
 }
 
 async function delEvents(id){
