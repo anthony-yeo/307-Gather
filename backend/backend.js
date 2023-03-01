@@ -105,7 +105,7 @@ app.patch('/users/:id', async (req, res) => {
             res.status(200).send('Friend Successfully Added');
         }
         else if (result === false){
-            res.status(300).send('Users are already friends');
+            res.status(409).send('Users are already friends');
         }
         else{
             res.status(442).send('Unprocessable Entity');
