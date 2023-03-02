@@ -25,11 +25,11 @@ try {
 
 //WHAT ARE SOME WAYS WE WANT TO FILTER USER BY?
 //--VERIFIED USERS
-async function getUsers(req) {
+async function getUsers(first, last) {
   let result;
-  const first = req.query.firstName;
-  const last = req.query.lastName;
 
+
+  //http://localhost:5000/users/?firstName=test&lastName=test
 
   if (first === undefined && last === undefined){
     result = await userModel.find();
@@ -44,9 +44,7 @@ async function getUsers(req) {
   else{
     result = await userModel.find({firstName:first,lastName:last});
   }
-
-  return result;
-  
+  return result; 
 }
 
 

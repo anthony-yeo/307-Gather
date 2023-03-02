@@ -19,8 +19,10 @@ app.get('/', (req, res) => {
 //GET USERS
 app.get("/users", async (req, res) => {
     try {
-    
-        const result = await userServices.getUsers(req);
+        const first = req.query.firstName;
+        const last = req.query.lastName;
+        const result = await userServices.getUsers(first, last);
+        
 
         if (result.length === 0){
             res.send("No users found").status(204);
