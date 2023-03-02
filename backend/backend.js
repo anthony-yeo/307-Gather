@@ -7,7 +7,6 @@ const eventServices = require('./models/eventServices');
 const app = express();                  
 const port = 5000;          
 
-//-----------------HASH PASSWORD USING BCRYPT 10 ROUNDS----------------------------------
 
 app.use(cors());
 app.use(express.json());               
@@ -21,16 +20,27 @@ app.get('/', (req, res) => {
 app.get("/users", async (req, res) => {
     try {
         const result = await userServices.getUsers();
-        if (result===undefined)
-            res.status(406).send('User not found.');
-        else{
-            res.status(200).send({users_list: result});
-        }         
+        res.status(200).send({users_list: result});
+     
     } catch (error) {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
     }
 });
+
+app.get('/users/:id', async (req, res) => {
+    try{
+        result = await userServices.findUserById(req.params['id']);
+
+        if (result === undefined)
+            res.status(406).send('User not found');
+        else
+            res.status(200).send(result);
+    } catch (error){
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
+    }
+})
 
 //ADD A USER
 app.post('/users', async (req, res) => {
@@ -87,10 +97,10 @@ app.post('/login', async (req, res) => {
 app.delete('/users/', async (req, res) => {
     const userToDel = await userServices.delUser(req.body);
     res.send(userToDel);
-    // if (userToDel)
-    //     res.status(202).send(userToDel)
-    // else
-    //     res.status(500).send(userToDel)
+    if (userToDel)
+        res.status(202).send(userToDel)
+    else
+        res.status(500).send(userToDel)
 });
 
 
