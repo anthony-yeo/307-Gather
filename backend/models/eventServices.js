@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const conn_str = 'mongodb+srv://ProjectGather:'+process.env.DB_PASSWORD+'@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
        
-
+ 
 try {
   // Connect to the MongoDB cluster
    mongoose.connect(
