@@ -32,3 +32,9 @@ jobs:
     - run: npm ci --prefix ./backend
     - run: npm run build --if-present --prefix ./backend
     - run: npm test --prefix ./backend
+    - name: Test Secrets
+      run: |
+        echo "$DEVOPS"
+      env:
+        DEVOPS: ${{ secrets.DB_PASSWORD }}
+        
