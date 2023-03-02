@@ -25,10 +25,30 @@ try {
 
 //WHAT ARE SOME WAYS WE WANT TO FILTER USER BY?
 //--VERIFIED USERS
-async function getUsers() {
-  result = await userModel.find();
+async function getUsers(req) {
+  let result;
+  const first = req.query.firstName;
+  const last = req.query.lastName;
+
+
+  if (first === undefined && last === undefined){
+    result = await userModel.find();
+  }
+  else if (last === undefined){
+    result = await userModel.find({firstName:first});
+    //return firstName;
+  } 
+  else if (first === undefined){
+    result = await userModel.find({lastName:last});
+  }
+  else{
+    result = await userModel.find({firstName:first,lastName:last});
+  }
+
   return result;
+  
 }
+
 
 async function findUserById(id) {
   try {

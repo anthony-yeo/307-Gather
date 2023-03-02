@@ -19,9 +19,16 @@ app.get('/', (req, res) => {
 //GET USERS
 app.get("/users", async (req, res) => {
     try {
-        const result = await userServices.getUsers();
-        res.status(200).send({users_list: result});
-     
+    
+        const result = await userServices.getUsers(req);
+
+        if (result.length === 0){
+            res.send("No users found").status(204);
+        }
+        else{
+            res.status(200).send({users_list: result});
+        }
+
     } catch (error) {
         console.log(error);
         res.status(500).send('An error ocurred in the server.');
