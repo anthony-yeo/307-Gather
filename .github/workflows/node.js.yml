@@ -33,10 +33,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: ./backend/package-lock.json
-      env:
-        credentials: ${{ secrets.DB_PASSWORD }}
     - run: npm ci --prefix ./backend
     - run: npm run build --if-present --prefix ./backend
     - run: npm test --prefix ./backend
+      env:
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
     
         
