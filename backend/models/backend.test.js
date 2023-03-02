@@ -76,7 +76,6 @@ describe ('GATHER BACKEND TEST SUITE', () => {
                 'id':'1234567890ab',
                 'eventId':'63f67dd6dba96ee863500a62'
             }
-
             const result = await eventServices.addEvents(newEvent);
             expect(result).toEqual(expect.objectContaining(result));
         })
@@ -102,4 +101,3 @@ describe ('GATHER BACKEND TEST SUITE', () => {
         done();
     });
 });
-

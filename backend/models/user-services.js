@@ -1,27 +1,25 @@
-const bcrypt = require('bcrypt');
-const mongoose = require('mongoose');
-
-const userModel = require('./user');
-const eventModel = require('./events');
-const attendanceModel = require('./attendance');
-
-mongoose.set('debug', true);
+const mongoose = require("mongoose");
+const userModel = require("./user");
+const eventModel = require("./events");
+const attendanceModel = require("./attendance");
+const bcrypt = require("bcrypt");
+mongoose.set("debug", true);
 require('dotenv').config();
 
-const conn_str = 'mongodb+srv://ProjectGather:'+process.env.DB_PASSWORD+'@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
-       
+const conn_str = 'mongodb+srv://ProjectGather:' + process.env.DB_PASSWORD + '@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
+const hashRound = 10;            
 
-try {
-  // Connect to the MongoDB cluster
-   mongoose.connect(
-    conn_str,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    () => console.log('> MONGODB users connection \t- successful')
-  );
-
-} catch (e) {
-  console.log('> MONGODB users connection \t- failed');
-}
+mongoose.connect(
+  conn_str,
+  { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true 
+  },(err) => {
+    if (err) {
+      console.log("error in connection");
+    } else {
+      console.log("mongodb users is connected");
+}})
 
 //WHAT ARE SOME WAYS WE WANT TO FILTER USER BY?
 //--VERIFIED USERS
@@ -44,7 +42,7 @@ async function addUser(user) {
     const checkEmail = await userModel.findOne({email:user.email});
     
     if (checkEmail !== undefined || checkEmail === null){
-      const hash = bcrypt.hashSync(user.password, 10);
+      const hash = bcrypt.hashSync(user.password, hashRound);
       user.password = hash;
 
       const userToAdd = new userModel(user);
@@ -149,5 +147,3 @@ exports.delUser = delUser;
 exports.validateUser = validateUser;
 exports.saveEvent = saveEvent;
 exports.addFriend = addFriend;
-
-  

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+var mongoose = require("mongoose");
 var ObjectId = require('mongodb').ObjectId;
 
 const AttendanceSchema = new mongoose.Schema(
