@@ -14,11 +14,11 @@ function AccountForm(props) {
     const { name, value } = event.target;
     if (name === "password")
       setPerson(
-         {firstname: person['firstname'], lastname: person['username'], email: person["email"], password: value}
+         {firstname: person['firstname'], lastname: person['lastname'], email: person["email"], password: value}
       );
     else if (name === "email")
       setPerson(
-         {firstname: person['firstname'], lastname: person['username'], email: value, password: person["password"]}
+         {firstname: person['firstname'], lastname: person['lastname'], email: value, password: person["password"]}
       );
     else if (name === "lastname")     
        setPerson(
