@@ -1,16 +1,19 @@
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "!mapbox-gl"; 
+import mapboxgl from "!mapbox-gl"; // eslint-disable-line import/no-webpack-loader-syntax
 import Table from './Table';
 import Form from './Form';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_ACCESS_TOKEN;
 
 function Map() {
+  const lng_default = -120.66318847361558;
+  const lat_default = 35.303280314081285;
+  const zoom_default = 14;
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [lng, setLng] = useState(-120.66318847361558);
-  const [lat, setLat] = useState(35.303280314081285);
-  const [zoom, setZoom] = useState(14);
+  const [lng, setLng] = useState(lng_default);
+  const [lat, setLat] = useState(lat_default);
+  const [zoom, setZoom] = useState(zoom_default);
   const [characters, setCharacters] = useState([]);
 
   useEffect(() => {
