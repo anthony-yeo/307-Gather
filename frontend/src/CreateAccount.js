@@ -10,14 +10,18 @@ function AccountForm(props) {
   );
 
   function handleChange(event) {
-    const { username, value } = event.target;
-    if (username === "password")
+    const { name, value } = event.target;
+    if (name === "password")
       setPerson(
-         {username: person['username'], password: value}
+         {username: person['username'], email: person["email"], password: value}
+      );
+    else if (name === "email")
+      setPerson(
+         {username: person['username'], email: value, password: person["password"]}
       );
     else     
        setPerson(
-         {username: value, password: person['password']}   
+         {username: value, email: person["email"], password: person['password']}   
        );
   }
 
@@ -30,7 +34,7 @@ function AccountForm(props) {
 
   return (
     <form>
-      <label htmlFor="name">Userame</label>
+      <label htmlFor="name">Username</label>
       <input
         type="text"
         name="name"
@@ -40,7 +44,7 @@ function AccountForm(props) {
       <label htmlFor="email">Email</label>
       <input
         type="text"
-        username="email"
+        name="email"
         id="email"
         value={person.email}
         onChange={handleChange} />
