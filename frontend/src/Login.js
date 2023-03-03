@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 function Login(props) {
     const [person, setPerson] = useState(
        {
-          username: "",
+          email: "",
           password: "",
        }
     );
@@ -12,29 +12,29 @@ function Login(props) {
       const { name, value } = event.target;
       if (name === "password")
         setPerson(
-           {username: person['username'], password: value}
+           {email: person['email'], password: value}
         );
       else     
          setPerson(
-           {username: value, password: person['password']}   
+           {email: value, password: person['password']}   
          );
     }
 
     function submitForm() {
       console.log("Submit Form Person: "+person);
       props.handleSubmit(person);
-      setPerson({username: '', password: ''});
+      setPerson({email: '', password: ''});
 
     }
 
     return (
       <form>
-        <label htmlFor="name">Username</label>
+        <label htmlFor="name">Email</label>
         <input
           type="text"
           name="name"
           id="name"
-          value={person.username}
+          value={person.email}
           onChange={handleChange} />
         <label htmlFor="password">Password</label>
         <input

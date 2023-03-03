@@ -3,7 +3,8 @@ import React, {useState} from 'react';
 function AccountForm(props) {
   const [person, setPerson] = useState(
      {
-        username: "",
+        firstname: "",
+        lastname: "",
         email: "",
         password: "",
      }
@@ -13,33 +14,44 @@ function AccountForm(props) {
     const { name, value } = event.target;
     if (name === "password")
       setPerson(
-         {username: person['username'], email: person["email"], password: value}
+         {firstname: person['firstname'], lastname: person['username'], email: person["email"], password: value}
       );
     else if (name === "email")
       setPerson(
-         {username: person['username'], email: value, password: person["password"]}
+         {firstname: person['firstname'], lastname: person['username'], email: value, password: person["password"]}
       );
-    else     
+    else if (name === "lastname")     
        setPerson(
-         {username: value, email: person["email"], password: person['password']}   
+         {firstname: person['firstname'], lastname: value, email: person["email"], password: person['password']}   
+       );
+    else
+       setPerson(
+         {firstname: value, lastname: person["lastname"], email: person["email"], password: person['password']}
        );
   }
 
   function submitForm() {
     console.log("Submit Form Person: "+person);
     props.handleSubmit(person);
-    setPerson({username: '', email: '', password: ''});
+    setPerson({firstname: '', lastname: '', email: '', password: ''});
    
   }
 
   return (
     <form>
-      <label htmlFor="name">Username</label>
+      <label htmlFor="firstname">First Name</label>
       <input
         type="text"
-        name="name"
-        id="name"
-        value={person.username}
+        name="firstname"
+        id="firstname"
+        value={person.firstname}
+        onChange={handleChange} />
+      <label htmlFor="lastname">Last Name</label>
+      <input
+        type="text"
+        name="lastname"
+        id="lastname"
+        value={person.lastname}
         onChange={handleChange} />
       <label htmlFor="email">Email</label>
       <input
