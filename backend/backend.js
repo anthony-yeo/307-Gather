@@ -1,142 +1,188 @@
-const express = require('express');     //Import Express Module
-const app = express();                  //Create Instance of Express
-const port = 5000;                      //Define Port Number
+const express = require('express');    
 const cors = require('cors');
 
-//export DEBUG='express:router'
-const users = { 
-    users_list :
-    [
-       { 
-          id : 'xyz789',
-          name : 'Charlie',
-          job: 'Janitor',
-       },
-       {
-          id : 'abc123', 
-          name: 'Mac',
-          job: 'Bouncer',
-       },
-       {
-          id : 'ppp222', 
-          name: 'Mac',
-          job: 'Professor',
-       }, 
-       {
-          id: 'yat999', 
-          name: 'Dee',
-          job: 'Aspring actress',
-       },
-       {
-          id: 'zap555', 
-          name: 'Dennis',
-          job: 'Bartender',
-       }
-    ]
- }
- 
+const userServices = require('./models/userServices');
+const eventServices = require('./models/eventServices');
+
+const app = express();                  
+const port = 5000;          
+
+
 app.use(cors());
-app.use(express.json());                //Process Data as JSON format
+app.use(express.json());               
 
-app.get('/', (req, res) => {            //API Endpoint
-    res.send('Hello World!');
+app.get('/', (req, res) => {            
+    res.send("Hello World.")
 });
 
-app.get('/users', (req, res) => {
-    const name = req.query.name;
-    const job = req.query.job
+//USERS--------------------------------------------------------------
+//GET USERS
+app.get("/users", async (req, res) => {
+    try {
+        const first = req.query.firstName;
+        const last = req.query.lastName;
+        const result = await userServices.getUsers(first, last);
+        
 
-    if (name != undefined && job != undefined){
-        //console.log('here')
-        let result = findUserbyJobName(name, job);
-        result = {users_list: result};
-        res.send(result);
-    }
-    else if (name != undefined){
-        let result = findUserByName(name);
-        result = {users_list: result};
-        res.send(result);
-    }
-    else if (job != undefined){
-        let result = findUserByJob(job);
-        result = {users_list: result};
-        res.send(result);
-    }
-    else{
-        res.send(users);
+        if (result.length === 0){
+            res.send("No users found").status(204);
+        }
+        else{
+            res.status(200).send({users_list: result});
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
     }
 });
 
-const findUserByName = (name) =>{
-    return users['users_list'].filter( (user) => user['name'] === name);
-}
+app.get('/users/:id', async (req, res) => {
+    try{
+        result = await userServices.findUserById(req.params['id']);
 
-const findUserByJob = (job) =>{
-    return users['users_list'].filter( (user) => user['job'] === job);
-}
+        if (result === undefined)
+            res.status(406).send('User not found');
+        else
+            res.status(200).send(result);
+    } catch (error){
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
+    }
+})
 
-const findUserbyJobName = (name, job) => {
-    return users['users_list'].filter( (user) => user['name'] === name && user['job'] == job);
-}
+//ADD A USER
+app.post('/users', async (req, res) => {
+    try{
+        const user = req.body;
+        const result = await userServices.addUser(user);
 
-app.get('/users/:id', (req, res) => {
+        if (result === undefined){
+            res.status(442).send('Unprocessable Entity');
+        }
+        else{
+            res.status(201).send(result);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
+});
+
+//SAVE AN EVENT
+app.patch('/users/:id', async (req, res) => {
+    try{
+        eventId = req.body['eventId'];
+        hostId = req.params['id'];
+
+        const result = await userServices.saveEvent(hostId, eventId);
+        if (result === undefined || result === false){
+            res.status(442).send('Unprocessable Entity');
+        }
+        else{
+            res.status(201).send(result);
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
+});
+
+//LOGIN AUTHENTICATION
+app.post('/login', async (req, res) => {
+    try{
+        const result = await userServices.validateUser(req.body);
+        if (result===true)
+            res.status(200).send('Successful login');
+        else    
+            res.status(401).end();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
+});
+
+//DELETE A USER
+app.delete('/users/', async (req, res) => {
+    const userToDel = await userServices.delUser(req.body);
+    res.send(userToDel);
+    if (userToDel)
+        res.status(202).send(userToDel)
+    else
+        res.status(500).send(userToDel)
+});
+
+
+//ADD A FRIEND
+app.patch('/users/:id', async (req, res) => {
+    try{
+        const userId = req.params['id'];
+        const friendId = req.body.friendId;
+
+        const result = await userServices.addFriend(userId, friendId);
+        if (result === true){
+            res.status(200).send('Friend Successfully Added');
+        }
+        else if (result === false){
+            res.status(409).send('Users are already friends');
+        }
+        else{
+            res.status(442).send('Unprocessable Entity');
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error occured in the server');
+    }
+});
+
+//EVENTS-------------------------------------------------------------
+
+//GET EVENTS
+app.get("/events", async (req, res) => {
+    try {
+        const result = await eventServices.getEvents();
+        if(result===undefined) {
+            res.status(406).send('Event not found.');
+        } else {
+            res.send({event_list: result});  
+        }       
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');
+    }
+});
+
+//ADD AN EVENT
+app.post('/events', async (req, res) => {
+    const event = req.body;
+    try {
+        const savedEvent = await eventServices.addEvents(event);
+        if (savedEvent)
+            res.status(201).send(savedEvent);
+        else
+            res.status(442).send('Unprocessable Entity');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');   
+    }
+});
+
+//DELETE AN EVENT
+app.delete('/events/:id', async (req, res) => {
     const id = req.params['id'];
-    let result = findUserById(id);
-    if (result === undefined || result.length ==  0)
-        res.status(404).send('Resource not found');
-    else{
-        result = {users_list: result};
-        res.send(result);
+    try {
+        const eventToDel = await eventServices.delEvents(id);
+        if (eventToDel===true)
+            res.status(204).send(eventToDel);
+        else
+            res.status(406).send('Event not found.');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('An error ocurred in the server.');  
     }
 });
 
-function findUserById(id){
-    return users['users_list'].find((user) => user['id'] === id);
-    //Find returns the first occurence that matches the conditions
-}
 
-app.post('/users', (req, res) => {
-    req.body.id = makeId(6)
-    const userToAdd = req.body;
-    //console.log(req.body.id)
-    addUser(userToAdd);
-    res.status(201).send(userToAdd).end();
-});
-
-function addUser(user){
-    //console.log(user.id)
-    users['users_list'].push(user);
-}
-
-function makeId(length){
-    let result = '';
-    let characters = 'abcdefghijklmnopqrstuvzwyz0123456789';
-    let charactersLength = characters.length;
-    for (let i = 0; i < length; i++){
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-app.delete('/users/:id', (req, res) => {
-    const id = req.params['id'];
-    delUser(id)
-    res.status(204).end();
-});
-
-function delUser(id){
-    let x = FindUserByIdDelete(id);
-    users['users_list'].splice(x, 1);
-}
-
-function FindUserByIdDelete(id){
-    return users['users_list'].findIndex((user) => user['id'] === id);
-}
-
-
-app.listen(port, () => {                //Listen to incoming requests on our defined port
-    console.log(`Example app listening at http://localhost:${port}'`);
-});
-
-
-
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`);
+  });
