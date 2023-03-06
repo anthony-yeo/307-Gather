@@ -140,9 +140,18 @@ app.patch('/users/:id', async (req, res) => {
 //GET EVENTS
 app.get("/events", async (req, res) => {
     try {
-        const result = await eventServices.getEvents();
+
+        //Types of filtering
+        const event_id = req.query.event_id;
+        const name = req.query.name;
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
+        const time = req.query.time;
+        const cat = req.query.cat;
+
+        const result = await eventServices.getEvents(event_id, name, startDate, endDate, time, cat);
         if(result===undefined) {
-            res.status(406).send('Event not found.');
+            res.status(406).send('Event not found.');   
         } else {
             res.send({event_list: result});  
         }       

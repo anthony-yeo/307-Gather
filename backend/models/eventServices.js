@@ -22,13 +22,33 @@ try {
   console.log("> MONGODB events connection \t- failed");
 }
 
-async function getEvents(name) {
+async function getEvents(event_id, host_id, name, sDate, eDate, time, cat) {
+
+    //ADD VERIFIED TAG TO EVENT SCHEMA
+
     let result;
-    if (name === undefined) { 
-      result = await eventModel.find();
+    //http://localhost:5000/events/?event_id=63f93d5929eeae20467349be
+    if(event_id !== undefined){
+      result = await eventModel.findOne({'_id':event_id});
+    }
+    //http://localhost:5000/events/?name=Club Rush
+    else if (name !== undefined) { 
+      result = await eventModel.find({'name':name});
+    }
+    //http://localhost:5000/events/?cat=Academics
+    else if (cat !== undefined){
+      result = await eventModel.find({'category':cat});
+    }
+    //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
+    else if (sDate !== undefined && eDate !== undefined){
+      result = await eventModel.find({'date':
+                                   {$gte: sDate,
+                                    $lte: eDate,}
+                                  });
     }
     return result;
-  }
+}
+
   
   
   async function addEvents(event) {
