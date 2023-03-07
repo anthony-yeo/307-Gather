@@ -143,13 +143,14 @@ app.get("/events", async (req, res) => {
 
         //Types of filtering
         const event_id = req.query.event_id;
+        const host_id = req.query.host_id;
         const name = req.query.name;
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
         const time = req.query.time;
         const cat = req.query.cat;
 
-        const result = await eventServices.getEvents(event_id, name, startDate, endDate, time, cat);
+        const result = await eventServices.getEvents(event_id, host_id, name, startDate, endDate, time, cat);
         if(result===undefined) {
             res.status(406).send('Event not found.');   
         } else {

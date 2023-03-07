@@ -46,13 +46,22 @@ async function getEvents(event_id, host_id, name, sDate, eDate, time, cat) {
                                     $lte: eDate,}
                                   });
     }
+    else{
+      result = await eventModel.find();
+    }
     return result;
-}
+  }
 
   
   
   async function addEvents(event) {
     const eventToAdd = new eventModel(event);
+    const v = await isVerified(eventToAdd.hostId);
+    
+    if (v === true){
+      eventToAdd.verified = true;
+    }
+
     const createdEvent = await eventToAdd.save();
   
     event_id = createdEvent._id;
@@ -61,8 +70,6 @@ async function getEvents(event_id, host_id, name, sDate, eDate, time, cat) {
     const result = await eventAttendance.save();
   
     return result;
-  
-    
   }
   
   async function delEvents(id){
@@ -71,6 +78,11 @@ async function getEvents(event_id, host_id, name, sDate, eDate, time, cat) {
   
     const result = await eventToDel.remove();
     return result;
+  }
+
+  async function isVerified(id){
+    var host = await userModel.findById({'_id': id});
+    return(host.verified);
   }
   
   
