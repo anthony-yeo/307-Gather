@@ -22,33 +22,31 @@ try {
   console.log("> MONGODB events connection \t- failed");
 }
 
-async function getEvents(event_id, host_id, name, sDate, eDate, time, cat) {
+async function getEvents(query) {
 
-    //ADD VERIFIED TAG TO EVENT SCHEMA
-
-    let result;
     //http://localhost:5000/events/?event_id=63f93d5929eeae20467349be
-    if(event_id !== undefined){
-      result = await eventModel.findOne({'_id':event_id});
+    if(query.event_id !== undefined){
+      result = await eventModel.findOne({'_id':query.event_id});
     }
-    //http://localhost:5000/events/?name=Club Rush
-    else if (name !== undefined) { 
-      result = await eventModel.find({'name':name});
+    // //http://localhost:5000/events/?name=Club Rush or ?name=Club works
+    else if (query.name !== undefined) { 
+      result = await eventModel.find({'name':{$regex : query.name, $options : 'i'}});
     }
-    //http://localhost:5000/events/?cat=Academics
-    else if (cat !== undefined){
-      result = await eventModel.find({'category':cat});
+    // //http://localhost:5000/events/?cat=Academics
+    else if (query.cat !== undefined){
+      result = await eventModel.find({'category':query.cat});
     }
-    //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
-    else if (sDate !== undefined && eDate !== undefined){
+    // //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
+    else if (query.startDate !== undefined && query.endDate !== undefined){
       result = await eventModel.find({'date':
-                                   {$gte: sDate,
-                                    $lte: eDate,}
-                                  });
+                                        {$gte: query.startDate,
+                                         $lte: query.endDate,}
+                                     });
     }
-    else{
-      result = await eventModel.find();
-    }
+    // else{
+    //   result = await eventModel.find();
+    // }
+
     return result;
   }
 
