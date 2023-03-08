@@ -24,33 +24,62 @@ try {
 
 async function getEvents(query) {
 
+    let result;
+
     //http://localhost:5000/events/?event_id=63f93d5929eeae20467349be
     if(query.event_id !== undefined){
       result = await eventModel.findOne({'_id':query.event_id});
     }
-    // //http://localhost:5000/events/?name=Club Rush or ?name=Club works
-    else if (query.name !== undefined) { 
-      result = await eventModel.find({'name':{$regex : query.name, $options : 'i'}});
-    }
-    // //http://localhost:5000/events/?cat=Academics
-    else if (query.cat !== undefined){
-      result = await eventModel.find({'category':query.cat});
-    }
-    // //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
+    //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
+    //Start and End date can't be the same, both must be provided
     else if (query.startDate !== undefined && query.endDate !== undefined){
-      result = await eventModel.find({'date':
-                                        {$gte: query.startDate,
-                                         $lte: query.endDate,}
-                                     });
+
+        //http://localhost:5000/events/?name=Club Rush or ?name=Club works
+      if (query.name !== undefined) { 
+        result = await eventModel.find({'name':{$regex : query.name, $options : 'i'},
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      //http://localhost:5000/events/?cat=Academics
+      else if (query.cat !== undefined){
+        result = await eventModel.find({'category':query.cat,
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      //http://localhost:5000/events/?location=Dexter Lawn
+      else if (query.location !== undefined){
+        result = await eventModel.find({'location':{$regex : query.location, $options : 'i'},
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      else{
+        result = await eventModel.find({'date':
+                                          {$gte: query.startDate,
+                                          $lte: query.endDate,}});
+      }
     }
-    // else{
-    //   result = await eventModel.find();
-    // }
+    else{
+      result = await eventModel.find();
+    }
 
     return result;
   }
 
-  
+  // async function findByName(name){
+  //   return await eventModel.find({'name':{$regex : name, $options : 'i'}});
+  // }
+
+  // async function findByCat(cat){
+  //   return await eventModel.find({'category':cat});
+  // }
+
+  // async function findByLocation(location){
+  //   return await eventModel.find({'location':{$regex : location, $options : 'i'}});
+  // }
+
+  // async function findByDate(){
+
+  // }
   
   async function addEvents(event) {
     const eventToAdd = new eventModel(event);
