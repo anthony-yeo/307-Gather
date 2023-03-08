@@ -1,3 +1,7 @@
+### Build Status
+![](https://github.com/anthony-yeo/307-Gather/actions/workflows/node.js.yml/badge.svg)
+____
+
 ### Style Guide
 
 For the Gather project, style guidelines are as follows:
