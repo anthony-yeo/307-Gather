@@ -29,7 +29,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
         });
     
         test('Get all events -- success', async () => {
-            const result = await eventServices.getEvents();
+            const result = await eventServices.getEvents({});
             expect(result).toEqual(expect.arrayContaining(result));
         });
     });
