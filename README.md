@@ -13,11 +13,33 @@ ____
 
 ____
 ### Build Instruction
-**[TODO]**
 
-___
-### Environment Variables
-**[TODO]**
+To compile and build the backend for `Gather`, clone the repo and run
+
+```
+npm install
+```
+
+To run it locally, run
+
+```
+npm run dev
+```
+#### Environment Variables
+Note that a `.env` in the root of the repo is needed to access the database.
+If the file does not exist, please go to mongoDB and get an _account of your own_, put
+
+```
+DB_PASSWORD=<YOUR PASSWORD>
+```
+
+inside that `.env`.
+
+<br></br>
+To run all the test cases and view the test coverage, enter
+```
+npm run test
+```
 
 ___
 
