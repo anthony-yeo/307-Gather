@@ -12,7 +12,7 @@ ____
 ![](https://github.com/anthony-yeo/307-Gather/actions/workflows/node.js.yml/badge.svg)
 
 ____
-### Build Instruction
+### Build Instructions
 
 To compile and build the backend for `Gather`, clone the repo and run
 
