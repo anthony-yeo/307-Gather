@@ -4,7 +4,7 @@
   "description": "",
   "main": "backend.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --collectCoverage",
+    "test": "jest --detectOpenHandles --collectCoverage --coverageDirectory='coverage'",
     "dev": "nodemon backend.js",
     "start": "node backend.js",
     "lint": "eslint .",

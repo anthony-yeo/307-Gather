@@ -11,42 +11,42 @@ require('dotenv').config();
 const conn_str = 'mongodb+srv://ProjectGather:'+process.env.DB_PASSWORD+'@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
        
 
+
 try {
   // Connect to the MongoDB cluster
    mongoose.connect(
     conn_str,
     { useNewUrlParser: true, useUnifiedTopology: true },
-    () => console.log('> MONGODB users connection \t- successful')
+    () => console.log("> MONGODB events connection \t- successful")
   );
 
 } catch (e) {
-  console.log('> MONGODB users connection \t- failed');
+  console.log("> MONGODB events connection \t- failed");
 }
+
 
 
 async function getUsers(query) {
   //http://localhost:5000/users/?firstName=test&lastName=test
-  let result;
 
   if (isEmpty(query)){
-    result = await userModel.find();
+    return await userModel.find();
   }
   else if (query.verified !== undefined){
-    result = await userModel.find({verified: query.verified});
-    console.log(result);
+    return await userModel.find({verified: query.verified});
   }
-  else if(query.firstName != undefined && query.lastName != undefined){
-    console.log('here');
-    result = await userModel.find({firstName:query.firstName,
+  else if(query.firstName !== undefined && query.lastName !== undefined){
+    return await userModel.find({firstName:query.firstName,
                                    lastName:query.lastName});
   }
-  else if (query.firstName != undefined){
-    result = await userModel.find({firstName:{$regex : query.firstName, $options : 'i'}});
+  else if (query.firstName !== undefined){
+    return await userModel.find({firstName:{$regex : query.firstName, $options : 'i'}});
   }
-  else if (query.lastName != undefined){
-    result = await userModel.find({lastName:{$regex : query.lastName, $options : 'i'}});
+
+  else if (query.lastName !== undefined){
+    return await userModel.find({lastName:{$regex : query.lastName, $options : 'i'}});
   }
-  return result;
+
 }
 
 
@@ -90,11 +90,12 @@ async function saveEvent(userId, eventId) {
   return savedEvent; 
 }
 
+
 async function validateUser(reqInfo) {
   if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
 
   const user = await userModel.findOne({ 'email':reqInfo.email });
-  if (user === undefined) return false;
+  if (user === null) return false;
 
   return bcrypt.compareSync(reqInfo.password, user.password);
   
@@ -102,14 +103,17 @@ async function validateUser(reqInfo) {
 
 async function addFriend(userId, friendId) {
 
+  if (userId === undefined || friendId === undefined){
+    return undefined;
+  }
+
   var user = await userModel.findOne({'_id':userId});
-  var userFriends = user.friends;
-
   var friend = await userModel.findById({'_id': friendId});
+
+  if (friend === null || user === null) return undefined;
+
+  var userFriends = user.friends;
   var friendFriends = friend.friends;
-
-  if (friend === undefined || user === undefined) return undefined;
-
   
   if(userFriends.includes(friendId) || friendFriends.includes(userId)) return false;
 
@@ -128,10 +132,10 @@ async function addFriend(userId, friendId) {
 }
 
 async function delUser(body){
-  if (body.userId === undefined){
+  if (body.email !== undefined){
     return userModel.find({'email':body.email}).remove();
   }
-  else if (body.email === undefined){
+  else if (body.userId !== undefined){
     return userModel.find({'_id':body.userId}).remove();
   }
   else
