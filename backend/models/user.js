@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema(
     //NOTE{IS USER A VERIFIED USER?}
     verified:{
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     }
   },

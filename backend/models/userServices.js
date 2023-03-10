@@ -23,141 +23,124 @@ try {
   console.log('> MONGODB users connection \t- failed');
 }
 
-//WHAT ARE SOME WAYS WE WANT TO FILTER USER BY?
-//--VERIFIED USERS
-async function getUsers(first, last) {
+
+async function getUsers(query) {
+  //http://localhost:5000/users/?firstName=test&lastName=test
   let result;
 
-
-  //http://localhost:5000/users/?firstName=test&lastName=test
-
-  if (first === undefined && last === undefined){
+  if (isEmpty(query)){
     result = await userModel.find();
   }
-  else if (last === undefined){
-    result = await userModel.find({firstName:first});
-    //return firstName;
-  } 
-  else if (first === undefined){
-    result = await userModel.find({lastName:last});
+  else if (query.verified !== undefined){
+    result = await userModel.find({verified: query.verified});
+    console.log(result);
   }
-  else{
-    result = await userModel.find({firstName:first,lastName:last});
+  else if(query.firstName != undefined && query.lastName != undefined){
+    console.log('here');
+    result = await userModel.find({firstName:query.firstName,
+                                   lastName:query.lastName});
   }
-  return result; 
+  else if (query.firstName != undefined){
+    result = await userModel.find({firstName:{$regex : query.firstName, $options : 'i'}});
+  }
+  else if (query.lastName != undefined){
+    result = await userModel.find({lastName:{$regex : query.lastName, $options : 'i'}});
+  }
+  return result;
 }
 
 
 async function findUserById(id) {
-  try {
     return await userModel.findById(id);
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
+}
+
+async function findUserByEmail(email){
+  return await userModel.find({email:email});
 }
 
 async function addUser(user) {
-  try {
-    const checkEmail = await userModel.findOne({email:user.email});
-    
-    if (checkEmail !== undefined || checkEmail === null){
-      const hash = bcrypt.hashSync(user.password, 10);
-      user.password = hash;
+  const checkEmail = await userModel.findOne({email:user.email});
+  console.log(checkEmail);
 
-      const userToAdd = new userModel(user);
-      const savedUser = await userToAdd.save();
+  if (checkEmail === null){
+    const hash = bcrypt.hashSync(user.password, 10);
+    user.password = hash;
 
-      return savedUser;
-    }
-    else{
-      return checkEmail;
-    }
-    
-  } catch (error) {
-    console.log(error);
+    const userToAdd = new userModel(user);
+    const savedUser = await userToAdd.save();
+
+    return savedUser;
+  }
+  else{
     return undefined;
   }
 }
 
 async function saveEvent(userId, eventId) {
-  try {
-    var savedEvent = await attendanceModel.findOne({event_id:eventId});
-    if (savedEvent === null) return false;
+  var savedEvent = await attendanceModel.findOne({event_id:eventId});
+  if (savedEvent === null) return false;
 
-    var newAttendeeList = savedEvent.attendees;
-    newAttendeeList.push(userId);
+  var newAttendeeList = savedEvent.attendees;
+  newAttendeeList.push(userId);
 
-    await attendanceModel.updateOne({'event_id':eventId}, {
-      attendees: newAttendeeList
-    });
+  await attendanceModel.updateOne({'event_id':eventId}, {
+    attendees: newAttendeeList
+  });
 
-    return savedEvent;
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
+  return savedEvent; 
 }
 
 async function validateUser(reqInfo) {
   if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
-  try {
-    const user = await userModel.findOne({ 'email':reqInfo.email });
-    if (user === undefined) return false;
 
-    return bcrypt.compareSync(reqInfo.password, user.password);
-  } catch (error) {
-    console.log(error);
-    return undefined;
-  }
+  const user = await userModel.findOne({ 'email':reqInfo.email });
+  if (user === undefined) return false;
+
+  return bcrypt.compareSync(reqInfo.password, user.password);
+  
 }
 
 async function addFriend(userId, friendId) {
 
-  try {
-    var user = await userModel.findOne({'_id':userId});
-    var userFriends = user.friends;
+  var user = await userModel.findOne({'_id':userId});
+  var userFriends = user.friends;
 
-    var friend = await userModel.findById({'_id': friendId});
-    var friendFriends = friend.friends;
+  var friend = await userModel.findById({'_id': friendId});
+  var friendFriends = friend.friends;
 
-    if (friend === undefined || user === undefined) return undefined;
+  if (friend === undefined || user === undefined) return undefined;
 
-    
-    if(userFriends.includes(friendId) || friendFriends.includes(userId)) return false;
+  
+  if(userFriends.includes(friendId) || friendFriends.includes(userId)) return false;
 
-    userFriends.push(friend);
-    friendFriends.push(user);
+  userFriends.push(friend);
+  friendFriends.push(user);
 
-    await userModel.updateOne({ '_id':userId }, {
-      friends: userFriends
-    });
+  await userModel.updateOne({ '_id':userId }, {
+    friends: userFriends
+  });
 
-    await userModel.updateOne({'_id':friendId}, {
-      friends: friendFriends
-    });
+  await userModel.updateOne({'_id':friendId}, {
+    friends: friendFriends
+  });
 
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
+  return true;
 }
 
 async function delUser(body){
-  try{
-    if (body.userId === undefined){
-      return userModel.find({'email':body.email}).remove();
-    }
-    else if (body.email === undefined){
-      return userModel.find({'_id':body.userId}).remove();
-    }
-    else
-      return false;
-  } catch (error) {
-    console.log(error);
-    return false;
+  if (body.userId === undefined){
+    return userModel.find({'email':body.email}).remove();
   }
+  else if (body.email === undefined){
+    return userModel.find({'_id':body.userId}).remove();
+  }
+  else
+    return false;
+}
+
+
+function isEmpty(obj) {
+  return !Object.keys(obj).length > 0;
 }
 
 exports.getUsers = getUsers;
@@ -167,5 +150,5 @@ exports.delUser = delUser;
 exports.validateUser = validateUser;
 exports.saveEvent = saveEvent;
 exports.addFriend = addFriend;
-
+exports.findUserByEmail = findUserByEmail
   

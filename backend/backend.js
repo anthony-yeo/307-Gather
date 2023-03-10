@@ -19,12 +19,9 @@ app.get('/', (req, res) => {
 //GET USERS
 app.get("/users", async (req, res) => {
     try {
-        const first = req.query.firstName;
-        const last = req.query.lastName;
-        const result = await userServices.getUsers(first, last);
-        
+        const result = await userServices.getUsers(req.query);
 
-        if (result.length === 0){
+        if (result === undefined){
             res.send("No users found").status(204);
         }
         else{
@@ -103,9 +100,8 @@ app.post('/login', async (req, res) => {
 });
 
 //DELETE A USER
-app.delete('/users/', async (req, res) => {
+app.delete('/users', async (req, res) => {
     const userToDel = await userServices.delUser(req.body);
-    res.send(userToDel);
     if (userToDel)
         res.status(202).send(userToDel)
     else
