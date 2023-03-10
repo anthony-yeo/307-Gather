@@ -16,6 +16,10 @@ ____
 **[TODO]**
 
 ___
+### Environment Variables
+**[TODE]**
+
+___
 
 ### UI Prototype
 There are <ins>_**2 links**_</ins> because we have them on different pages.
