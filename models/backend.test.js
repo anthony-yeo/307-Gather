@@ -104,6 +104,8 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await eventServices.getEvents({location:location, startDate:startDate, endDate:endDate});
             expect(result).toEqual(expect.arrayContaining(result));
         });
+
+
     });
 
     describe ('POST REQUESTS', () => {
@@ -237,7 +239,6 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.saveEvent(id, eventId);
             expect(result).toEqual(expect.objectContaining(result));
         })
-
         test('Save a `non-existent` event -- failure', async () => {
             id = '64090410492c25ebe1d1272d';
             eventId = '63f93d5929eeae20467349be';
@@ -268,7 +269,6 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await eventServices.delEvents('313233343536373839306162');
             expect(result).toEqual(expect.objectContaining(result));
         })
-
         test('Delete an event 2 -- success', async () => {
             const result = await eventServices.delEvents('313233343536373839306164');
             expect(result).toEqual(expect.objectContaining(result));
@@ -278,6 +278,8 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await eventServices.delEvents('313233343536373839306163');
             expect(result).toEqual(false);
         })
+
+        
     })
 
 
@@ -287,4 +289,3 @@ describe ('GATHER BACKEND TEST SUITE', () => {
         done();
     });
 });
-
