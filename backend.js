@@ -19,11 +19,9 @@ app.get('/', (req, res) => {
 //GET USERS
 app.get("/users", async (req, res) => {
     try {
-
         const result = await userServices.getUsers(req.query);
 
         if (result === undefined){
-
             res.send("No users found").status(204);
         }
         else{
@@ -104,7 +102,6 @@ app.post('/login', async (req, res) => {
 //DELETE A USER
 app.delete('/users', async (req, res) => {
     const userToDel = await userServices.delUser(req.body);
-
     if (userToDel)
         res.status(202).send(userToDel)
     else
@@ -155,7 +152,6 @@ app.get("/events", async (req, res) => {
         const result = await eventServices.getEvents(req.query);
         if(result===undefined) {
             res.status(406).send('Event not found.');   
-
         } else {
             res.send({event_list: result});  
         }       
@@ -197,5 +193,5 @@ app.delete('/events/:id', async (req, res) => {
 
 
 app.listen(process.env.PORT || port, () => {
-  console.log("REST API is listening.");
-});
+    console.log("REST API is listening.");
+  });
