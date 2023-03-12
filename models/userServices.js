@@ -60,7 +60,6 @@ async function findUserByEmail(email){
 
 async function addUser(user) {
   const checkEmail = await userModel.findOne({email:user.email});
-  console.log(checkEmail);
 
   if (checkEmail === null){
     const hash = bcrypt.hashSync(user.password, 10);
