@@ -11,12 +11,12 @@ require('dotenv').config();
 const conn_str = 'mongodb+srv://ProjectGather:'+process.env.DB_PASSWORD+'@project-gather.iidopil.mongodb.net/?retryWrites=true&w=majority'
        
 
+
 try {
   // Connect to the MongoDB cluster
    mongoose.connect(
     conn_str,
     { useNewUrlParser: true, useUnifiedTopology: true },
-
     () => console.log("> MONGODB events connection \t- successful")
   );
 
@@ -60,7 +60,6 @@ async function findUserByEmail(email){
 
 async function addUser(user) {
   const checkEmail = await userModel.findOne({email:user.email});
-  console.log(checkEmail);
 
   if (checkEmail === null){
     const hash = bcrypt.hashSync(user.password, 10);
@@ -72,6 +71,8 @@ async function addUser(user) {
     return savedUser;
   }
   else{
+    return undefined;
+  }
 }
 
 async function saveEvent(userId, eventId) {
@@ -153,5 +154,3 @@ exports.validateUser = validateUser;
 exports.saveEvent = saveEvent;
 exports.addFriend = addFriend;
 exports.findUserByEmail = findUserByEmail;
-
-  
