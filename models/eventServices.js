@@ -64,22 +64,6 @@ async function getEvents(query) {
 
     return result;
   }
-
-  // async function findByName(name){
-  //   return await eventModel.find({'name':{$regex : name, $options : 'i'}});
-  // }
-
-  // async function findByCat(cat){
-  //   return await eventModel.find({'category':cat});
-  // }
-
-  // async function findByLocation(location){
-  //   return await eventModel.find({'location':{$regex : location, $options : 'i'}});
-  // }
-
-  // async function findByDate(){
-
-  // }
   
   async function addEvents(event) {
     const eventToAdd = new eventModel(event);
@@ -102,7 +86,6 @@ async function getEvents(query) {
   async function delEvents(id){
     const eventToDel = await eventModel.findOne({'_id': id});
     if(!eventToDel) return false;
-  
     const result = await eventToDel.remove();
     return result;
   }

@@ -66,6 +66,46 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await eventServices.getEvents({});
             expect(result).toEqual(expect.arrayContaining(result));
         });
+
+        test('Get event by id -- success', async () => {
+            const event_id = '63f93d5929eeae20467349be';
+            const result = await eventServices.getEvents({event_id:event_id});
+            console.log(result);
+            expect(result).toEqual(expect.objectContaining(result));
+        });
+
+        test('Get events by only dates -- success', async () => {
+            const startDate = '2023-02-28';
+            const endDate = '2023-03-28';
+            const result = await eventServices.getEvents({startDate:startDate, endDate:endDate});
+            expect(result).toEqual(expect.arrayContaining(result));
+        });
+
+        test('Get events by name and date -- success', async () => {
+            const startDate = '2023-01-01';
+            const endDate = '2024-01-01';
+            const name = 'Club';
+            const result = await eventServices.getEvents({name:name, startDate:startDate, endDate:endDate});
+            expect(result).toEqual(expect.arrayContaining(result));
+        });
+
+        test('Get events by cat and date -- success', async () => {
+            const startDate = '2023-01-01';
+            const endDate = '2024-01-01';
+            const cat = 'Social Gathering';
+            const result = await eventServices.getEvents({cat:cat, startDate:startDate, endDate:endDate});
+            expect(result).toEqual(expect.arrayContaining(result));
+        });
+
+        test('Get events by location and date -- success', async () => {
+            const startDate = '2023-01-01';
+            const endDate = '2024-01-01';
+            const location = 'Dexter';
+            const result = await eventServices.getEvents({location:location, startDate:startDate, endDate:endDate});
+            expect(result).toEqual(expect.arrayContaining(result));
+        });
+
+
     });
 
     describe ('POST REQUESTS', () => {
@@ -148,7 +188,23 @@ describe ('GATHER BACKEND TEST SUITE', () => {
 
             const result = await eventServices.addEvents(newEvent);
             expect(result).toEqual(expect.objectContaining(result));
-        })
+        });
+
+        test('Add an event 2 -- success', async () => {
+            const newEvent = {
+                '_id':'1234567890ad',
+                'hostId':'64090410492c25ebe1d1272d',
+                'name':'CS Career Fair',
+                'location':'Recreational Center',
+                'description':'Find a job',
+                'date':'2023-05-14 16:00:00',
+                'category':'Academics',
+                'gps':[24.56, 21.4],
+            }
+
+            const result = await eventServices.addEvents(newEvent);
+            expect(result).toEqual(expect.objectContaining(result));
+        });
     });
 
 
@@ -183,7 +239,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await userServices.saveEvent(id, eventId);
             expect(result).toEqual(expect.objectContaining(result));
         })
-        test('Save a `non-existent` event -- success', async () => {
+        test('Save a `non-existent` event -- failure', async () => {
             id = '64090410492c25ebe1d1272d';
             eventId = '63f93d5929eeae20467349be';
 
@@ -213,6 +269,17 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const result = await eventServices.delEvents('313233343536373839306162');
             expect(result).toEqual(expect.objectContaining(result));
         })
+        test('Delete an event 2 -- success', async () => {
+            const result = await eventServices.delEvents('313233343536373839306164');
+            expect(result).toEqual(expect.objectContaining(result));
+        })
+
+        test('Delete an event -- failure', async () => {
+            const result = await eventServices.delEvents('313233343536373839306163');
+            expect(result).toEqual(false);
+        })
+
+        
     })
 
 
