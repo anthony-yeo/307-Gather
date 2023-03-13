@@ -55,11 +55,11 @@ async function findUserById(id) {
 }
 
 async function findUserByEmail(email){
-  return await userModel.find({email:email});
+  return await userModel.findOne({email:email});
 }
 
 async function addUser(user) {
-  const checkEmail = await userModel.findOne({email:user.email});
+  const checkEmail = await findUserByEmail(user.email);
 
   if (checkEmail === null){
     const hash = bcrypt.hashSync(user.password, 10);
@@ -91,12 +91,16 @@ async function saveEvent(userId, eventId) {
 
 
 async function validateUser(reqInfo) {
+
   if (reqInfo.email === undefined || reqInfo.password === undefined) return false;
 
   const user = await userModel.findOne({ 'email':reqInfo.email });
   if (user === null) return false;
 
-  return bcrypt.compareSync(reqInfo.password, user.password);
+  if(bcrypt.compareSync(reqInfo.password, user.password)){
+    return user;
+  }
+  return false;
   
 }
 

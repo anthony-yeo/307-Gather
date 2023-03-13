@@ -88,11 +88,14 @@ app.patch('/users/:id', async (req, res) => {
 //LOGIN AUTHENTICATION
 app.post('/login', async (req, res) => {
     try{
+        console.log(req.body);
         const result = await userServices.validateUser(req.body);
-        if (result===true)
-            res.status(200).send('Successful login');
-        else    
+        const compare = await userServices.findUserByEmail('email@email.com');
+
+        if (result===false)
             res.status(401).end();
+        else    
+            res.status(200).send('Successful login');
     } catch (error) {
         console.log(error);
         res.status(500).send('An error occured in the server');

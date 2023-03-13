@@ -70,7 +70,6 @@ describe ('GATHER BACKEND TEST SUITE', () => {
         test('Get event by id -- success', async () => {
             const event_id = '63f93d5929eeae20467349be';
             const result = await eventServices.getEvents({event_id:event_id});
-            console.log(result);
             expect(result).toEqual(expect.objectContaining(result));
         });
 
@@ -147,8 +146,9 @@ describe ('GATHER BACKEND TEST SUITE', () => {
                 'email':'email@email.com',
                 'password':'password',
             }
+            const user = await userServices.findUserByEmail('email@email.com');
             const result = await userServices.validateUser(body);
-            expect(result).toEqual(true);
+            expect(result).toEqual(expect.objectContaining(user));
         });
 
         test('Login -- failure', async () => {
@@ -214,7 +214,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
             const user1 = await userServices.findUserByEmail('Jest@Test.com');
             const user2 = await userServices.findUserByEmail('Jest@Test2.com');
 
-            const result = await userServices.addFriend(user1[0]._id, user2[0]._id);
+            const result = await userServices.addFriend(user1._id, user2._id);
             expect(result).toEqual(true);
         });
         test('Add a friend -- failure', async () => {
@@ -251,8 +251,7 @@ describe ('GATHER BACKEND TEST SUITE', () => {
     describe ('DELETE REQUESTS', () => {
         test('Delete a user -- success', async () => {
             const delUser = await userServices.findUserByEmail('Jest@Test.com');
-            console.log(delUser[0]._id);
-            const result = await userServices.delUser({userId:delUser[0]._id});
+            const result = await userServices.delUser({userId:delUser._id});
             expect(result).toEqual(expect.objectContaining(result));
         });
         test('Delete a user 2 -- success', async () => {
