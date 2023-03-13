@@ -37,6 +37,11 @@ const EventsSchema = new mongoose.Schema(
     gps:{
       type: [Number],
       required: true,
+    },
+    verified:{
+      type: Boolean,
+      require: true,
+      default: false,
     }
   },
   { collection: "events" }

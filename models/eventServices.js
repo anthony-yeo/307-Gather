@@ -22,17 +22,57 @@ try {
   console.log("> MONGODB events connection \t- failed");
 }
 
-async function getEvents(name) {
+async function getEvents(query) {
+
     let result;
-    if (name === undefined) { 
+
+    //http://localhost:5000/events/?event_id=63f93d5929eeae20467349be
+    if(query.event_id !== undefined){
+      result = await eventModel.findOne({'_id':query.event_id});
+    }
+    //http://localhost:5000/events/?startDate=2023-02-28&endDate=2023-02-29
+    //Start and End date can't be the same, both must be provided
+    else if (query.startDate !== undefined && query.endDate !== undefined){
+
+        //http://localhost:5000/events/?name=Club Rush or ?name=Club works
+      if (query.name !== undefined) { 
+        result = await eventModel.find({'name':{$regex : query.name, $options : 'i'},
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      //http://localhost:5000/events/?cat=Academics
+      else if (query.cat !== undefined){
+        result = await eventModel.find({'category':query.cat,
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      //http://localhost:5000/events/?location=Dexter Lawn
+      else if (query.location !== undefined){
+        result = await eventModel.find({'location':{$regex : query.location, $options : 'i'},
+                                        'date':{$gte: query.startDate,
+                                                $lte: query.endDate,}});
+      }
+      else{
+        result = await eventModel.find({'date':
+                                          {$gte: query.startDate,
+                                          $lte: query.endDate,}});
+      }
+    }
+    else{
       result = await eventModel.find();
     }
+
     return result;
   }
   
-  
   async function addEvents(event) {
     const eventToAdd = new eventModel(event);
+    const v = await isVerified(eventToAdd.hostId);
+    
+    if (v === true){
+      eventToAdd.verified = true;
+    }
+
     const createdEvent = await eventToAdd.save();
   
     event_id = createdEvent._id;
@@ -41,17 +81,20 @@ async function getEvents(name) {
     const result = await eventAttendance.save();
   
     return result;
-  
-    
   }
   
   async function delEvents(id){
     const eventToDel = await eventModel.findOne({'_id': id});
     if(!eventToDel) return false;
-  
     const result = await eventToDel.remove();
     return result;
   }
+
+  async function isVerified(id){
+    var host = await userModel.findById({'_id': id});
+    return(host.verified);
+  }
+
   
   
   exports.getEvents = getEvents;

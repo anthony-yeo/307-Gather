@@ -19,12 +19,9 @@ app.get('/', (req, res) => {
 //GET USERS
 app.get("/users", async (req, res) => {
     try {
-        const first = req.query.firstName;
-        const last = req.query.lastName;
-        const result = await userServices.getUsers(first, last);
-        
+        const result = await userServices.getUsers(req.query);
 
-        if (result.length === 0){
+        if (result === undefined){
             res.send("No users found").status(204);
         }
         else{
@@ -91,11 +88,14 @@ app.patch('/users/:id', async (req, res) => {
 //LOGIN AUTHENTICATION
 app.post('/login', async (req, res) => {
     try{
+        console.log(req.body);
         const result = await userServices.validateUser(req.body);
-        if (result===true)
-            res.status(200).send('Successful login');
-        else    
+        const compare = await userServices.findUserByEmail('email@email.com');
+
+        if (result===false)
             res.status(401).end();
+        else    
+            res.status(200).send('Successful login');
     } catch (error) {
         console.log(error);
         res.status(500).send('An error occured in the server');
@@ -103,9 +103,8 @@ app.post('/login', async (req, res) => {
 });
 
 //DELETE A USER
-app.delete('/users/', async (req, res) => {
+app.delete('/users', async (req, res) => {
     const userToDel = await userServices.delUser(req.body);
-    res.send(userToDel);
     if (userToDel)
         res.status(202).send(userToDel)
     else
@@ -140,9 +139,22 @@ app.patch('/users/:id', async (req, res) => {
 //GET EVENTS
 app.get("/events", async (req, res) => {
     try {
-        const result = await eventServices.getEvents();
+
+        // //Types of filtering
+        // const event_id = req.query.event_id;
+        // const host_id = req.query.host_id;
+        // const name = req.query.name;
+        // const startDate = req.query.startDate;
+        // const endDate = req.query.endDate;
+        // const time = req.query.time;
+        // const cat = req.query.cat;
+
+        // console.log(req.query);
+
+        //Testing eventServices.getEvents({cat:"Atheletics"});
+        const result = await eventServices.getEvents(req.query);
         if(result===undefined) {
-            res.status(406).send('Event not found.');
+            res.status(406).send('Event not found.');   
         } else {
             res.send({event_list: result});  
         }       
@@ -184,5 +196,5 @@ app.delete('/events/:id', async (req, res) => {
 
 
 app.listen(process.env.PORT || port, () => {
-  console.log("REST API is listening.");
-});
+    console.log("REST API is listening.");
+  });
