@@ -158,4 +158,3 @@ exports.validateUser = validateUser;
 exports.saveEvent = saveEvent;
 exports.addFriend = addFriend;
 exports.findUserByEmail = findUserByEmail;
-  

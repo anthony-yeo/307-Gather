@@ -94,6 +94,7 @@ async function getEvents(query) {
     var host = await userModel.findById({'_id': id});
     return(host.verified);
   }
+
   
   
   exports.getEvents = getEvents;
