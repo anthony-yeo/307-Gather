@@ -1,6 +1,9 @@
 ### Gather Live Website
 https://gather-5411b.web.app
 
+### Gather Live Backend
+https://polygather.azurewebsites.net/
+
 ___
 ### Gather (Backend)
 Gather is a web app where Cal Poly students/faculty get to explore what events there are on campus and host their own events for everyone to attend.
